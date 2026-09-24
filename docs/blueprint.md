@@ -5,10 +5,31 @@ formalization goal; Theorem 1 remains the final objective.
 
 | Paper result | Proposed Lean result | Status |
 | --- | --- | --- |
-| Theorem 1 (thm:linear) | To be chosen | Unformalized |
-| Theorem 2 (thm:quantitative) | quantitative_bound | Unformalized; first goal |
+| Theorem 1 (thm:linear) | `linear_of_theorem4_corollary24`; public branch-set wrapper | Unformalized; conditional milestone planned |
+| Theorem 2 (thm:quantitative) | `Theorem2.quantitative_bound`; Mathlib-facing wrapper planned | Checked internally; public wrapper pending |
 | Reed--Seymour (1.3), eq:RS | ReedSeymour.reed_seymour_bound | Checked for every finite simple graph, including the empty graph |
-| Exponent bootstrap (thm:bootstrap) | To be chosen | Unformalized |
+| Exponent bootstrap (thm:bootstrap) | `LocalLinearBound` improvement from Corollary 24 | Unformalized |
+
+## Conditional Theorem 1 milestone
+
+The next milestone derives Theorem 1 from the checked Theorem 2 while taking
+paper Theorem 4 (Delcourt--Postle small-graph reduction) and Corollary 24
+(outer recursion bound) as explicit theorem hypotheses, not global Lean
+axioms. The deduction also formalizes connected-bipartite packing,
+induced-path localization, chromatic separation, and the exponent
+bootstrap. Theorem 5 is unnecessary for this conditional deduction:
+a sufficiently-large-t linear bound extends to all t >= 2 by
+monotonicity of clique-minor order and a larger absolute constant.
+
+The public Theorem 1 statement will conclude G.Colorable (C * t) and
+expand the absence of a K_t minor into connected, disjoint, pairwise
+touching branch sets. The pinned Mathlib has no graph-minor predicate.
+A Mathlib-facing Theorem 2 wrapper will use G.chromaticNumber and the
+explicit numeric term. Checked bridges connect both public statements
+to the internal graph-minor and chromatic-number APIs.
+
+The dependency order, four work lanes, input interfaces, and completion
+checks are recorded in [theorem1-plan.md](theorem1-plan.md).
 
 ## Theorem 2 dependency map
 
