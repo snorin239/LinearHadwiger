@@ -1,0 +1,1545 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype,hyperref,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,
+pdftitle={Proof of the Linear Hadwiger's conjecture}}
+\setlength{\emergencystretch}{2em}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\E}{\mathbb E}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\pos}[1]{\left(#1\right)_+}
+\newtheorem*{quantitativetheorem}{Theorem~\ref{thm:quantitative}}
+\newtheorem*{bootstraptheorem}{Theorem~\ref{thm:bootstrap}}
+\title{Proof of linear Hadwiger's conjecture}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove that there is an absolute constant $C$ such that every graph
+with no $K_t$ minor has chromatic number at most $Ct$. We first obtain
+a quantitative bound of the form $\chi(G)\le4h(G)+\varepsilon|G|+A_\varepsilon$,
+where $h(G)$ is the largest order of a complete minor and
+$\log A_\varepsilon=O(\varepsilon^{-2}\log(1/\varepsilon))$ as
+$\varepsilon\to0$. We then show that a local linear coloring bound
+for graphs of order at most $t(\log t)^\alpha$, for any fixed
+$\alpha>0$, implies such a bound at exponent $4\alpha/3$.
+Iterating this improvement and applying the small-graph
+reduction of Delcourt and Postle proves Linear Hadwiger's conjecture.
+\end{abstract}
+
+\section{Introduction}
+
+All graphs are finite and simple. A graph $H$ is a minor of a graph
+$G$ if a graph isomorphic to $H$ can be obtained from a subgraph of
+$G$ by contracting edges. We write $K_t$ for the complete graph on
+$t$ vertices. In 1943, Hadwiger~\cite{Had} conjectured that every
+$K_t$-minor-free graph is $(t-1)$-colorable. The conjecture holds for
+$t\le6$. Wagner's theorem~\cite{Wag} makes the case $t=5$ equivalent
+to the Four Color Theorem, and Robertson, Seymour, and
+Thomas~\cite{RST} proved the case $t=6$ by a further reduction to
+that theorem.
+
+The linear weakening asks whether an absolute constant $C$ suffices
+to color every $K_t$-minor-free graph with at most $Ct$ colors.
+This question appears explicitly in Reed and Seymour~\cite[p.~148]{RS}
+and is formulated as \emph{Linear Hadwiger's conjecture} in
+Norin, Postle, and Song~\cite[Conjecture~1.2]{NPS} and Delcourt and
+Postle~\cite[Conjecture~1.2]{DP}. Reed and Seymour proved a fractional
+version: the fractional chromatic number of every $K_t$-minor-free
+graph is at most $2(t-1)$~\cite[Theorem~1.3]{RS}.
+
+For ordinary coloring, Kostochka~\cite{Kos} and Thomason~\cite{Tho}
+independently obtained the bound $O(t\sqrt{\log t})$ in the 1980s.
+Their results bound the average degree of every $K_t$-minor-free
+graph, and hence give upper bounds of this order for its degeneracy
+and chromatic number. The density bound is sharp up to a constant
+factor, so a better coloring bound requires more than a stronger
+bound on degeneracy. Norin, Postle, and Song~\cite[Theorem~1.4]{NPS}
+broke this barrier by proving $O(t(\log t)^{1/4+\delta})$-colorability
+for every fixed $\delta>0$.
+
+Delcourt and Postle~\cite[Theorem~1.5]{DP} subsequently obtained
+$O(t\log\log t)$-colorability. They also reduced the linear conjecture
+to graphs of order $O(t(\log t)^4)$ and proved it for graphs excluding
+any fixed complete graph as a subgraph
+\cite[Theorem~1.6 and Corollaries~1.7--1.10]{DP}.
+More recently, Liu and Luo~\cite[Theorem~1.1]{LL} improved the general
+bound to $O(t\log\log\log t)$. Lin~\cite[Theorem~1.4 and p.~3]{Lin}
+improved the bound on the order of the highly connected subgraphs
+used in the Delcourt--Postle reduction, lowering its order cutoff to
+$O(t(\log t)^2)$. We prove the linear conjecture.
+
+\begin{theorem}\label{thm:linear}
+There is an absolute constant $C$ such that, for every integer $t\ge2$,
+every $K_t$-minor-free graph $G$ satisfies $\chi(G)\le Ct$.
+\end{theorem}
+
+We write $|G|$, $\chi(G)$,
+$\alpha(G)$, and $h(G)$ for the order, chromatic number, independence
+number, and largest order of a complete minor of $G$, respectively.
+These parameters are zero for the empty graph. A stable set is an
+independent set. All logarithms are natural.
+
+The proof has two parts. First, we approximate ordinary coloring by
+fractional coloring after adding a graph of bounded maximum degree.
+A weighted matching contraction controls the resulting fractional
+chromatic number in terms of the complete minors of the original
+graph. This yields a local linear coloring bound at a positive
+logarithmic order exponent. Second, we improve that exponent by
+packing connected induced bipartite subgraphs and localizing chromatic
+number near a short induced path. An adaptation of the recursive
+assembly of Delcourt and Postle completes this improvement. Repeating
+it reaches the local range required by their small-graph reduction.
+Section~\ref{sec:deduction} states the two auxiliary theorems and
+derives Theorem~\ref{thm:linear} from them; their proofs occupy
+Sections~\ref{sec:quantitative} and~\ref{sec:bootstrap}.
+
+\subsection*{AI disclosure}
+
+The proof presented in this paper was developed by OpenAI’s ChatGPT model Astra 6, following research directions and feedback supplied by the authors. The authors suggested several possible approaches, but almost none of their specific proof ideas were retained in the final argument. (Their suggestion to further exploit Liu and Luo’s  ideas of contractions involving unusually large independent sets in vertex neighbourhoods is reflected in the packing argument in Section 4.1.)
+
+The project began with the authors asking the model to prove the very dense case of Linear Hadwiger’s conjecture: there exists an absolute constant $C>0$ such that, for every $C'>0$, there exists $t_0>0$ such that, for every integer $t\ge t_0$, every graph $G$ satisfying
+$
+|V(G)|\le C't$ and
+$
+\chi(G)>Ct
+$
+contains a $K_t$ minor. After the model succeeded, the authors asked it to make the dependence of $t_0$ on $C'$ explicit.
+This request yielded a proof of linear Hadwiger's conjecture for graphs $G$ with $h(G)=t$ and $|V(G)| \leq t( \log t )^{1/2-o(1)}$, while by Delcourt-Postle result establishing it for graphs with $|V(G)| \leq t (\log t)^{4+o(1)}$ suffices. 
+
+Several approaches to  were tried at this point. We asked the model, in particular,  to find an original idea to bridge the gap between the two bounds, rather than trying to tighten them. This led to the bootstrap argument used in the present paper.
+
+
+\subsection{Provenance of the proof ideas}
+
+The hypergraph matching argument in Section~\ref{sec:quantitative} follows the
+R\"odl nibble method~\cite{Rodl} and Pippenger's almost-perfect-matching
+theorem for nearly regular hypergraphs with small codegrees; see
+\cite[Theorem~1.1]{EGJ} for the latter statement. We give an explicit
+proof because the dependence on the uniformity is needed when
+choosing $\varepsilon$. Independent vertex deletions that equalize
+survival probabilities occur in Kang, K\"uhn, Methuku, and
+Osthus~\cite[Section~5.1]{KKMO} and Gould and
+Kelly~\cite[Section~6.1]{GK}. Our implementation uses Poisson marks
+and controls the total degree deficit after trimming. We apply the
+resulting matching estimate to an auxiliary hypergraph whose edges
+encode stable sets and whose additional vertices control the number
+of colors.
+
+The passage from this rounding estimate to the quantitative coloring
+bound uses two further constructions proved here. A linear program
+with constraints on the weights of pairs yields a bounded-degree
+augmentation whose fractional chromatic number approximates the
+original chromatic number. A weighted matching contraction then
+transfers fractional-coloring weights to a minor of the original
+graph. Reed and Seymour's theorem~\cite[Theorem~1.3]{RS}, applied
+to that minor, supplies the complete-minor bound. Thus their
+fractional theorem is a direct input, while the augmentation and
+matching contraction provide the additional comparison with ordinary
+coloring.
+
+The factor-two lifting of a quotient coloring through connected
+bipartite pieces already appears in Reed and Seymour's discussion of
+chordal decompositions~\cite[p.~149]{RS}. Liu and
+Luo~\cite[Lemma~3.1]{LL} use a related contraction of induced stars
+with independent centers, for which the coloring loss is only one
+additional color. In Section~\ref{sec:bootstrap}, a maximal packing
+of connected induced bipartite subgraphs of prescribed order leaves
+a remainder with no large such subgraph. We then adapt the induced-path
+construction of Gy\'arf\'as~\cite[proof of Theorem~2.4]{Gyarfas}:
+following a component of large chromatic number localizes the
+chromatic obstruction in the neighborhood of a short path. The
+absence of large induced stars bounds the independence number of
+that neighborhood, and the Reed--Seymour bound converts this into
+the order bound needed for the local coloring hypothesis.
+
+The outer recursion is a direct adaptation of Delcourt and
+Postle~\cite[Definition~2.4 and Section~7]{DP}. We use their chromatic
+separability framework and their assembly of a complete minor from
+three smaller models, together with their notion of wovenness and
+linkage rerouting lemma~\cite[Definition~5.12 and Lemma~5.15]{DP}.
+Our fan lemma follows from their redundant form of Menger's
+theorem~\cite[Lemma~5.3]{DP}. The routing hub is obtained from the
+connectivity theorem of Gir\~ao and Narayanan~\cite{GN}, in the
+quantitative form recorded in~\cite[Theorem~5.1]{DP}; Nguyen's
+stronger theorem~\cite[Theorem~1.2]{N} also suffices. Choosing the
+hub inside a subgraph of prescribed chromatic number controls the
+chromatic cost of its deletion. This permits the recursion to use
+the separation supplied by the packing and path argument. The
+remaining linkage and rooted-minor inputs are the Thomas--Wollan
+theorem~\cite[Corollary~1.3]{TW} and Kawarabayashi's lemma in the
+form stated in~\cite[Lemma~5.14]{DP}.
+
+\section{Two auxiliary theorems and the main deduction}\label{sec:deduction}
+
+Our first auxiliary theorem supplies the initial local coloring bound.
+\begin{theorem}\label{thm:quantitative}
+For every graph $G$ and every $0<\varepsilon\le1$,
+\begin{equation}\label{eq:quantitative}
+ \chi(G)\le4h(G)+\varepsilon|G|+A_\varepsilon,
+ \qquad A_\varepsilon=(100/\varepsilon)^{2000/\varepsilon^2}.
+\end{equation}
+\end{theorem}
+
+For $\alpha>0$, say that a \emph{local linear bound holds at exponent
+$\alpha$} if there are constants $D\ge1$ and $t_0$ such that, for every
+integer $t\ge t_0$,
+\[
+ G\text{ is }K_t\text{-minor-free},\quad |G|\le t(\log t)^\alpha
+ \quad\Longrightarrow\quad \chi(G)\le Dt.
+\]
+The constants may depend on the fixed exponent. The next theorem
+improves any such bound to a larger exponent.
+
+\begin{theorem}\label{thm:bootstrap}
+If a local linear bound holds at exponent $\alpha>0$, then a local
+linear bound holds at exponent $4\alpha/3$.
+\end{theorem}
+
+We prove Theorems~\ref{thm:quantitative} and~\ref{thm:bootstrap} in
+Sections~\ref{sec:quantitative} and~\ref{sec:bootstrap}, respectively.
+We first derive Theorem~\ref{thm:linear} from them. The external input
+for this deduction is the following small-graph reduction.
+
+\begin{theorem}[Delcourt--Postle, {\cite[Theorem~1.6]{DP}}]\label{thm:dp}
+There is an absolute integer $C_{\rm DP}\ge1$ such that, for every integer
+$t\ge3$ and every $K_t$-minor-free graph $G$,
+\[
+ \chi(G)\le C_{\rm DP}t(1+f(G,t)),
+\]
+where
+\[
+ f(G,t)=\max\left(\{0\}\cup\left\{\frac{\chi(H)}a:
+ \begin{array}{l}
+ H\subseteq G\text{ is }K_a\text{-minor-free},\\
+ a\in\mathbb Z,\quad t/\sqrt{\log t}\le a\le t,\\
+ |H|\le C_{\rm DP}a(\log a)^4
+ \end{array}\right\}\right).
+\]
+\end{theorem}
+
+We will also use the following explicit complete-minor density bound.
+\begin{theorem}[Kostochka--Thomason, {\cite[Theorem~4.3]{DP}}]
+\label{thm:density}
+Let $r\ge2$ be an integer. Every nonempty graph $H$ with
+$|E(H)|/|H|\ge30r\sqrt{\log r}$ contains a $K_r$ minor.
+\end{theorem}
+Consequently every $K_r$-minor-free graph satisfies
+\begin{equation}\label{eq:ktcolor}
+ \chi(H)\le60r\sqrt{\log r}+1.
+\end{equation}
+Indeed, the bound is immediate for the empty graph. Otherwise, an
+$s$-chromatic graph has a vertex-critical subgraph $C$ with
+minimum degree at least $s-1$, whence
+\[
+ \frac{|E(C)|}{|C|}\ge\frac{s-1}{2}.
+\]
+Theorem~\ref{thm:density} applies if the displayed coloring bound fails.
+
+\begin{proof}[Proof of Theorem~\ref{thm:linear}]
+Put $\varepsilon=1/[2(\log t)^{1/3}]$. For all sufficiently large $t$,
+this lies in $(0,1]$, and
+\[
+ \log A_\varepsilon
+ =\frac{2000}{\varepsilon^2}\log\frac{100}{\varepsilon}
+ =8000(\log t)^{2/3}\log\bigl(200(\log t)^{1/3}\bigr)
+ =o(\log t).
+\]
+Consequently $A_\varepsilon\le t/2$ eventually. If $G$ is $K_t$-minor-free
+and $|G|\le t(\log t)^{1/3}$, then $h(G)\le t-1$ and
+$\varepsilon|G|\le t/2$. Theorem~\ref{thm:quantitative} gives
+$\chi(G)\le4(t-1)+t/2+t/2<5t$.
+
+Thus a local linear bound holds at exponent $1/3$. Applying
+Theorem~\ref{thm:bootstrap} nine times, each time multiplying the
+exponent by $4/3$, gives a local linear bound at exponent
+$\alpha=(4/3)^9/3>4$.
+Let $D,t_0$ be the constants in this bound. For all sufficiently
+large $a$,
+\[
+ C_{\rm DP}(\log a)^4\le(\log a)^\alpha.
+\]
+For sufficiently large $t$, every integer $a$ in the window of
+Theorem~\ref{thm:dp} satisfies this inequality and $a\ge t_0$.
+Thus $f(G,t)\le D$ and $\chi(G)\le C_{\rm DP}(1+D)t$.
+The finitely many smaller values of $t$ are absorbed into the constant
+using~\eqref{eq:ktcolor}. The case $t=2$
+is immediate.
+\end{proof}
+
+\section{Proof of the quantitative coloring bound}\label{sec:quantitative}
+
+We prove Theorem~\ref{thm:quantitative} by combining three ingredients.
+An explicit hypergraph-matching estimate rounds a fractional coloring
+whose pair loads are small. Linear-programming duality then produces
+a bounded-degree augmentation whose fractional chromatic number
+approximates $\chi(G)$. Finally, a weighted matching contraction
+bounds that fractional chromatic number by $4h(G)$, up to an additive
+term depending only on the independence number and the augmentation
+degree.
+
+A fractional coloring assigns nonnegative weights $x_S$ to the
+nonempty stable sets of a graph, with
+\[
+\sum_{S\ni v}x_S\ge1\qquad(v\in V(G)).
+\]
+Its cost is $\sum_Sx_S$, and the minimum cost is the fractional
+chromatic number $\chi_f(G)$. Linear-programming duality gives
+\begin{equation}\label{eq:dual}
+\chi_f(G)=\max\left\{\sum_vy_v:
+ y_v\ge0,\quad \sum_{v\in S}y_v\le1
+ \text{ for every stable set }S\right\}.
+\end{equation}
+In particular, every dual-feasible weight satisfies $y_v\le1$.
+Reed and Seymour~\cite[Theorem~1.3]{RS} proved that every graph $J$
+satisfies
+\begin{equation}\label{eq:RS}
+\chi_f(J)\le2h(J).
+\end{equation}
+The empty graph satisfies this inequality directly.
+
+\subsection{An explicit almost-perfect matching lemma}
+
+A multihypergraph is $r$-uniform if every edge is a set of $r$ vertices; repeated copies
+ of an edge are allowed. The degree of a vertex is the number of incident edge copies,
+ and the codegree of two distinct vertices is the number of edge copies containing both.
+ A matching consists of pairwise disjoint edges.
+
+\begin{lemma}\label{lem:matching}
+Let $r\ge2$ be an integer, let $0<\xi\le1$, and put
+\[
+ \mu=\left(\frac{\xi}{100r}\right)^{20r}.
+\]
+Every finite $r$-uniform multihypergraph with positive maximum degree $D_0$, minimum
+ degree at least $(1-\mu)D_0$, and maximum codegree at most $\mu D_0$ has a matching
+ covering at least a $(1-\xi)$-fraction of its vertices.
+\end{lemma}
+
+\begin{proof}
+We equalize vertex survival probabilities and control the total degree
+deficit after each round. Write $x_+=\max\{x,0\}$.
+Let $H_0$ be such a hypergraph, let $N=|V(H_0)|$, and let $B$ be its maximum codegree.
+ Since $H_0$ has an edge and $r\ge2$, we have $B\ge1$ and hence $D_0\ge1/\mu$.
+
+Set
+\[
+ L=\log(4/\xi),\qquad a=\frac{\xi}{100rL},\qquad q=e^{-a},
+ \qquad T=\lceil L/a\rceil,
+ \qquad D_{i+1}=\lfloor q^{r-1}D_i\rfloor.
+\]
+We first record bounds ensuring that all $T$ rounds are well defined. We have $1\le
+ L\le4/\xi$, $ar\le1/100$, and $aT\le2L$. Put
+\[
+ b=2\mu(4/\xi)^{2r}.
+\]
+The definition of $\mu$ gives
+\begin{equation}\label{eq:b}
+ \sqrt b=\frac{\sqrt2\,4^r\xi^{9r}}{(100r)^{10r}}
+ \le \frac{\xi^5}{10^8r^3}.
+\end{equation}
+Indeed, $9r\ge5$ and
+$\sqrt2\,4^r/(100r)^{10r}\le1/(10^8r^3)$ for $r\ge2$.
+Since $L\le4/\xi$, we also have $a\ge\xi^2/(400r)$ and hence
+\[
+ b\le\frac{\xi^{10}}{10^{16}r^6}
+   \le\frac{\xi^2}{1600r}\le\frac a4.
+\]
+The definition of $\mu$ also gives $\mu\le\xi^2/800$.
+
+The geometric sum of the rounding errors in $D_i$ is at most
+$1/(1-q^{r-1})\le2/a$, since $r\ge2$ and
+$1-e^{-a}\ge a/2$. Thus, for $0\le i\le T$,
+\begin{align*}
+ D_i&\ge D_0e^{-(r-1)ai}-2/a\\
+ &\ge D_0(\xi/4)^{2r}-2/a
+ \ge \tfrac12D_0(\xi/4)^{2r}\ge4/a.
+\end{align*}
+Here $D_0(\xi/4)^{2r}\ge2/b\ge8/a$. Consequently
+\begin{equation}\label{eq:degreebounds}
+ B/D_i\le b,\qquad D_{i+1}\ge D_i/2,
+ \qquad D_{i+1}\ge q^rD_i.
+\end{equation}
+For the last inequality, note that
+\[
+ q^{r-1}D_i(1-q)\ge e^{-1/100}(4/a)(a/2)>1,
+\]
+so $\lfloor q^{r-1}D_i\rfloor\ge q^rD_i$. These bounds also imply $ar^2B/D_i\le1/2$.
+
+We construct a sequence $H_i$ of residual hypergraphs with maximum degree at most $D_i$
+ and codegree at most $B$. Write
+\[
+ n_i=|V(H_i)|,\qquad S_i=n_iD_i-r|E(H_i)|.
+\]
+The nonnegative quantity $S_i$ is the total degree deficit. Conditional on $H_i$, attach
+ to every edge an independent Poisson variable of mean $a/D_i$. Call the edge marked
+ when this variable is positive. Independently attach to each vertex $v$ a private
+ Poisson variable of mean
+\[
+ a\left(1-\frac{d_{H_i}(v)}{D_i}\right).
+\]
+Keep precisely the vertices whose private variable and all incident edge variables are
+ zero. Add to the matching every marked edge disjoint from all other marked edges. All
+ endpoints of these matching edges are deleted, so the matchings obtained in different
+ rounds are disjoint. Private variables do not affect acceptance of an isolated marked
+ edge.
+
+Let $J_i$ be induced by the surviving vertices. Delete edges of $J_i$ until its maximum
+ degree is at most $D_{i+1}$, and call the result $H_{i+1}$. This trimming does not
+ delete vertices or increase codegrees.
+
+Every vertex survives with probability exactly $q$, so
+\begin{equation}\label{eq:survivors}
+ \E[n_{i+1}\mid H_i]=qn_i,\qquad \E n_i=q^iN.
+\end{equation}
+More generally, if $U$ is a set of $k$ vertices, independence of the Poisson variables gives
+\begin{equation}\label{eq:joint}
+ \PP(U\text{ survives}\mid H_i)
+ =q^k\exp\!\left(\frac a{D_i}
+  \sum_{e\in E(H_i)}\pos{|e\cap U|-1}\right).
+\end{equation}
+The sum in the exponent is between zero and $\binom{k}{2}B$, since $(j-1)_+\le\binom
+ j2$. In particular, every edge survives with probability at least $q^r$.
+
+We next bound the expected number of trimmed edges. Fix $v\in V(H_i)$ and condition on
+ its survival. Let $X_v=d_{J_i}(v)$ under this conditioning. Dividing~\eqref{eq:joint}
+ for an edge containing $v$ by $q$ yields
+\[
+ \E X_v\le d_{H_i}(v)q^{r-1}+2ar^2B.
+\]
+We used $e^x\le1+2x$ for $0\le x\le1/2$ and $d_{H_i}(v)\le D_i$.
+
+For completeness, we bound the conditional variance directly. In the expansion of
+ $\operatorname{Var}X_v$, the number of ordered pairs of incident edges sharing a vertex
+ other than $v$, including diagonal pairs, is at most
+\[
+ \sum_{u\ne v}d_{H_i}(u,v)^2
+ \le B\sum_{u\ne v}d_{H_i}(u,v)
+ \le rBD_i.
+\]
+Their individual covariance is at most one. For any other pair $e,f$, the sets $e-v$ and
+ $f-v$ are disjoint. Conditional on $v$ surviving, its incident edge variables and its
+ private variable are forced to be zero; all other variables remain independent. The
+ covariance of the survival indicators of these two sets is
+\[
+ P_eP_f(e^\lambda-1),
+\]
+where $P_e,P_f$ are their conditional survival probabilities and $\lambda$ is the sum of
+ the means of the remaining Poisson variables affecting both sets. Private variables
+ cannot affect both. The codegree bound gives $\lambda\le ar^2B/D_i$, and hence the
+ covariance is at most $2ar^2B/D_i$. There are at most $D_i^2$ such ordered pairs.
+ Therefore
+\[
+ \operatorname{Var}X_v\le rBD_i+2ar^2BD_i\le4r^2BD_i.
+\]
+It follows from Cauchy--Schwarz and the rounding in $D_{i+1}$ that
+\[
+ \E\pos{X_v-D_{i+1}}
+ \le2r\sqrt{BD_i}+2ar^2B+1.
+\]
+All expectations and variances in this paragraph are conditional on $H_i$ and survival of $v$.
+
+Let $F_i$ be the number of edges deleted in trimming. At each deletion, choose an edge
+ incident with a vertex whose degree exceeds $D_{i+1}$. Each deletion reduces the sum of
+ positive excess degrees by at least one. Thus
+\[
+ \E[F_i\mid H_i]\le qn_i(2r\sqrt{BD_i}+2ar^2B+1).
+\]
+Since $qD_{i+1}\le q^rD_i$ and every edge survives with probability at least $q^r$, we obtain
+\begin{equation}\label{eq:deficit}
+ \E[S_{i+1}\mid H_i]
+ \le q^rS_i+rq n_i(2r\sqrt{BD_i}+2ar^2B+1).
+\end{equation}
+
+Let $W_i$ be the number of vertices deleted in round $i$ that are not covered by its
+ accepted edges. Every such vertex either has a positive private variable or belongs to
+ a marked edge intersecting another marked edge. The expected first count is at most
+ $aS_i/D_i$. There are at most $|E(H_i)|rD_i$ ordered pairs of distinct intersecting
+ edges; each pair is marked with probability at most $(a/D_i)^2$. Charging at most $r$
+ vertices to its first edge and using $r|E(H_i)|\le n_iD_i$ gives
+\begin{equation}\label{eq:waste}
+ \E[W_i\mid H_i]\le aS_i/D_i+ra^2n_i.
+\end{equation}
+
+It remains to sum these losses. Put $Z_i=\E S_i/D_i$. By~\eqref{eq:degreebounds}
+ and~\eqref{eq:deficit}, using $B\ge1$, $b\le1$, and $ar\le1$,
+\[
+ \begin{aligned}
+ Z_{i+1}
+ &\le Z_i+
+  \frac{2rN}{D_i}\bigl(2r\sqrt{BD_i}+2ar^2B+1\bigr)\\
+ &\le Z_i+
+  N\bigl(4r^2\sqrt b+4ar^3b+2rb\bigr)\\
+ &\le Z_i+10r^2N\sqrt b.
+ \end{aligned}
+\]
+Here $D_{i+1}\ge D_i/2$ and $\E n_i\le N$ give the first
+inequality, while $B/D_i\le b$ and $1/D_i\le B/D_i$ give the second.
+Initially $Z_0\le\mu N$, so $Z_i\le\mu N+10ir^2N\sqrt b$. Summing~\eqref{eq:waste}, and
+ using $T\le2L/a$, gives
+\begin{align*}
+ \frac1N\E\sum_{i<T}W_i
+ &\le aT\mu+10aT^2r^2\sqrt b+ra^2T\\
+ &\le2L\mu+\frac{4000r^3L^3}{\xi}\sqrt b+\frac{\xi}{50}
+ <\frac{\xi}{25}.
+\end{align*}
+For the last inequality, the first term is at most $\xi/100$, and~\eqref{eq:b} and
+ $L\le4/\xi$ bound the second by $256000\xi/10^8<\xi/100$. Finally~\eqref{eq:survivors}
+ gives $\E n_T=q^TN\le\xi N/4$. The vertices not covered by the union of the accepted
+ matchings are precisely those counted by $n_T+\sum_{i<T}W_i$. Their expected number is
+ less than $\xi N$, so some outcome proves the lemma.
+\end{proof}
+
+\subsection{Fractional coloring and low-codegree rounding}
+
+A fractional coloring can be rounded efficiently when no pair of vertices receives much
+ common weight. The color tokens in the construction below control the number of stable
+ sets in the resulting coloring.
+
+\begin{lemma}\label{lem:rounding}
+Let $m\ge1$ be an integer and let $0<\gamma\le1$. Set
+\[
+ r=m+2,\qquad
+ \mu=\left(\frac{\gamma}{400r^2}\right)^{20r},\qquad
+ n_0=\left\lceil10^6r^4\mu^{-4}+2/\gamma\right\rceil.
+\]
+Suppose $G$ has $n\ge n_0$ vertices, $\alpha(G)\le m$, and a fractional coloring of cost
+ $\tau$ satisfying
+\[
+ \sum_{S\ni v}x_S=1,\qquad
+ \sum_{S\supseteq\{u,v\}}x_S\le\mu/4\quad(u\ne v).
+\]
+Then $\chi(G)\le\tau+\gamma n$.
+\end{lemma}
+
+\begin{proof}
+Exact vertex loads give
+\[
+ n=\sum_S |S|x_S,\qquad n/m\le\tau\le n,\qquad x_S\le1.
+\]
+Take three disjoint vertex sets: $V(G)$, a set $P$ of $p=\lceil\tau\rceil$ color tokens,
+ and a set $Z$ of
+$z=\lceil(r-1)\tau-n\rceil$ dummy vertices. For every nonempty stable set $S$, token
+ $c\in P$, and set $T\subseteq Z$ of size $r-1-|S|$, assign the $r$-set $S\cup\{c\}\cup
+ T$ weight
+\[
+ \omega(S,c,T)=\frac{x_S}{p\binom z{r-1-|S|}}.
+\]
+Since $1\le |S|\le m$, each edge contains between one and $m$ dummy vertices. Also
+\[
+ (r-1)\tau-n\ge\tau\ge n/m,
+ \qquad n+p+z\le r\tau+2\le rn+2.
+\]
+Thus $p,z\ge n/m$; the assumed lower bound on $n$ also gives $z\ge m+1$.
+
+The weighted vertex degrees are $1$ at original vertices, $\tau/p$ at tokens, and
+ $((r-1)\tau-n)/z$ at dummy vertices. Both $\tau$ and $(r-1)\tau-n$
+ are at least $n/m$, while each ceiling adds less than one to its denominator.
+ Hence each of these degrees is at least
+ \[
+ \frac{n/m}{n/m+1}\ge 1-\frac{m}{n},
+ \]
+ and all are at most one. The weighted codegree
+ of two original vertices is at most $\mu/4$. For an original vertex and a token it is
+ $1/p$; for an original vertex and a dummy it is at most $m/z$; for a token and a dummy
+ it is $((r-1)\tau-n)/(pz)$; and for two dummies it is at most
+\[
+ \frac{m(m-1)\tau}{z(z-1)}.
+\]
+Two tokens have codegree zero. For the dummy--dummy bound, for example,
+$z\ge n/m$, $z-1\ge n/(2m)$, and $\tau\le n$ give
+\[
+ \frac{m(m-1)\tau}{z(z-1)}\le\frac{2m^4}{n}.
+\]
+The other displayed codegrees are no larger, so all weighted codegrees other than
+ original--original codegrees are at most $2m^4/n$. Because
+$\binom zj\ge z$ for $1\le j\le m$ under our order bound,
+\[
+ \omega(S,c,T)\le\frac1{pz}\le\frac{m^2}{n^2}.
+\]
+
+Independently sample each edge with probability $n\omega(S,c,T)$, which is at most one.
+ Chernoff bounds show that, with positive probability, all degrees differ from their
+ means by at most $\mu n/8$ and all codegrees are at most $\mu n/2$. Indeed,
+$n\ge16m^4/\mu$ gives $2m^4\le\mu n/8$, so every
+codegree has mean at most $\mu n/4$. Since there are at most $rn+2$
+ vertices, the total failure probability is at most
+\[
+ 8r^2n^2\exp(-\mu^2n/192)<1.
+\]
+For the strict inequality, $e^x\ge x^4/24$ and
+$n\ge10^6r^4\mu^{-4}$ give
+\[
+ 8r^2n^2e^{-\mu^2n/192}
+ \le\frac{192^5r^2}{\mu^8n^2}
+ \le\frac{192^5}{10^{12}r^6}<1.
+\]
+Also $n\ge8m/\mu$, so the minimum degree is at least
+$n-m-\mu n/8\ge(1-\mu/4)n$, while the maximum degree is at most
+$(1+\mu/8)n$. In particular,
+\[
+ 1-\mu/4\ge(1-\mu)(1+\mu/8),
+ \qquad \mu/2<\mu(1-\mu/4),
+\]
+and hence the sampled hypergraph meets both degree hypotheses of
+Lemma~\ref{lem:matching}.
+
+Apply Lemma~\ref{lem:matching} with $\xi=\gamma/(4r)$; its parameter is exactly
+ $\mu=(\xi/(100r))^{20r}$. The matching leaves at most $\xi(rn+2)\le\gamma n/2$ vertices
+ uncovered. It uses at most $p$ edges because each edge contains a distinct token. The
+ original vertices on each matching edge form a stable set. Coloring the remaining
+ original vertices separately uses at most $p+\gamma n/2\le\tau+\gamma n$ colors, since
+ $n\ge2/\gamma$.
+\end{proof}
+
+\subsection{A bounded-degree augmentation}
+
+We use the pair-load constraints in Lemma~\ref{lem:rounding} to identify a
+ bounded-degree set of nonedges whose addition makes fractional coloring approximate
+ ordinary coloring.
+
+\begin{lemma}\label{lem:augmentation}
+Let $m\ge2$ be an integer and let $0<\gamma\le1$. Let $\mu,n_0$
+ be the parameters in Lemma~\ref{lem:rounding} for $m,\gamma$. Every graph $G$ on $n\ge
+ n_0$ vertices with $\alpha(G)\le m$ admits a graph $F$ on $V(G)$ such that
+\[
+ E(F)\subseteq E(\overline G),\qquad
+ \Delta(F)\le\left\lceil\frac{8\binom m2}{\mu\gamma^2}\right\rceil,
+\]
+and
+\[
+ \chi_f(G+F)\ge\chi(G)-3\gamma n.
+\]
+Here $G+F$ is the graph with edge set $E(G)\cup E(F)$.
+\end{lemma}
+
+\begin{proof}
+Consider the linear program \begin{equation}\label{eq:pairlp}
+\begin{aligned}
+\tau=\min\;&\sum_S x_S,\\
+\text{subject to }&x_S\ge0,\\
+&\sum_{S\ni v}x_S\ge1 &&(v\in V(G)),\\
+&\sum_{S\supseteq\{u,v\}}x_S\le\mu/4 &&(u\ne v),
+\end{aligned}
+\end{equation} where \(S\) ranges over nonempty stable sets. Singleton sets give a
+ feasible solution of cost \(n\), so \(\tau\le n\).
+
+An optimal solution can be chosen with every vertex load exactly one. Indeed, if a
+ vertex is overcovered, transfer appropriate weight from sets containing it to those
+ sets with that vertex removed; delete the transferred weight when the resulting set is
+ empty. This leaves all other vertex loads unchanged and never increases cost or a pair
+ load. Since the original solution was optimal, the resulting feasible solution still
+ has cost \(\tau\). Processing all vertices proves the claim. Lemma~\ref{lem:rounding}
+ therefore gives \[
+\tau\ge\chi(G)-\gamma n.
+\]
+
+The dual of \eqref{eq:pairlp} is \begin{equation}\label{eq:pairdual}
+\begin{aligned}
+\tau=\max\;&\sum_v a_v-\frac{\mu}{4}\sum_{uv}b_{uv},\\
+\text{subject to }&a_v,b_{uv}\ge0,\\
+&\sum_{v\in S}a_v-\sum_{uv\subseteq S}b_{uv}\le1
+&&\text{for every nonempty stable set }S.
+\end{aligned}
+\end{equation} Only nonedge pairs need to be included. Fix an optimal dual solution.
+ Singleton constraints give \(a_v\le1\), and \(\tau\ge0\) gives
+ \begin{equation}\label{eq:penalty}
+\frac{\mu}{4}\sum_{uv}b_{uv}
+ =\sum_v a_v-\tau\le n,
+ \qquad\text{so}\qquad
+\sum_{uv}b_{uv}\le4n/\mu.
+\end{equation} Let \[
+X=\left\{v:\sum_u b_{uv}>\frac8{\mu\gamma}\right\}.
+\] By \eqref{eq:penalty},
+\[
+ \frac8{\mu\gamma}|X|
+ <\sum_{v\in X}\sum_u b_{uv}
+ \le2\sum_{uv}b_{uv}\le\frac{8n}{\mu},
+\]
+so \(|X|\le\gamma n\). Define \(F\) by adding every nonedge \(uv\)
+ with \(u,v\notin X\) and \[
+b_{uv}\ge\frac{\gamma}{\binom m2}.
+\] Each vertex outside \(X\) has total incident penalty at most \(8/(\mu\gamma)\), while vertices of
+ \(X\) receive no added edges. Consequently \[
+\Delta(F)\le\frac{8\binom m2}{\mu\gamma^2},
+\]
+which is independent of \(n\).
+
+Put \(H=G+F\), and assign weights \[
+a'_v=
+\begin{cases}
+a_v/(1+\gamma),&v\notin X,\\
+0,&v\in X.
+\end{cases}
+\] If \(S\) is stable in \(H\), then \(T=S\setminus X\) is stable in \(G\), has at most
+ \(m\) vertices, and every pair in \(T\) has penalty less than
+ \(\gamma/\binom m2\). The
+ constraint in \eqref{eq:pairdual} therefore yields \[
+\sum_{v\in T}a_v\le1+\sum_{uv\subseteq T}b_{uv}
+ \le1+\binom{|T|}{2}\frac{\gamma}{\binom m2}
+ \le1+\gamma.
+\] The same conclusion is immediate if \(T\) is empty. Hence \(a'\) is dual-feasible for
+ fractional coloring of \(H\). Using \(\sum_v a_v\ge\tau\), \(|X|\le\gamma n\), and
+ \(\tau\le n\), we obtain \[
+\begin{aligned}
+\chi_f(H)
+&\ge\frac{\sum_v a_v-|X|}{1+\gamma}\\
+&\ge\frac{\tau-\gamma n}{1+\gamma}\\
+&\ge\tau-2\gamma n\\
+&\ge\chi(G)-3\gamma n
+.
+\end{aligned}
+\]
+For the penultimate inequality, use
+$(\tau-\gamma n)/(1+\gamma)
+=\tau-\gamma(\tau+n)/(1+\gamma)\ge\tau-2\gamma n$,
+since $\tau\le n$. This proves the lemma. \end{proof}
+
+\subsection{Robust fractional bound}
+
+The augmentation changes the graph whose fractional chromatic number is measured. The
+ next proposition controls this change using the minor number of the original graph. All
+ dependence on the independence number and the degree of the augmentation enters an
+ additive constant.
+
+\begin{proposition}[Bounded-degree perturbations]\label{prop:robust} Let \(m\ge1\) and
+ \(d\ge0\) be integers. Suppose that \(\alpha(G)\le m\) and that \(F\) is a graph on
+ \(V(G)\) with \[
+E(F)\subseteq E(\overline G),\qquad \Delta(F)\le d.
+\] Set \[
+K=\sum_{j=0}^{2m-1}(d+1)^j.
+\] Then \begin{equation}\label{eq:robust}
+\chi_f(G+F)\le4h(G)+2m(K+1).
+\end{equation} \end{proposition}
+
+\begin{lemma}[Independent transversal]\label{lem:transversal} Let \(P\) be a perfect
+ matching on a finite set \(U\), and let \(D\) be a graph on \(U\) edge-disjoint from
+ \(P\). If no cycle of \(D+P\) contains an edge of \(P\), then \(D\) has an independent
+ set containing exactly one endpoint of every edge of \(P\).
+
+\end{lemma}
+
+\begin{proof} Every edge of \(P\) is a bridge of \(D+P\). Contract the connected
+ components of \(D\). No edge of \(P\) has both endpoints in one component, since that
+ edge together with a path inside the component would form a cycle. The resulting
+ multigraph is a forest: a cycle, including two parallel edges, would make its matching
+ edges nonbridges in \(D+P\).
+
+The degree of the vertex corresponding to a component \(C\) of \(D\) is exactly \(|C|\).
+ Indeed, each vertex of \(C\) is incident with one matching edge and every matching edge
+ leaves \(C\). If \(U\ne\varnothing\), this forest has a leaf. The corresponding
+ component of \(D\) is therefore a singleton \(\{x\}\), so \(x\) has no neighbor in
+ \(D\).
+
+Select \(x\), and delete \(x\) and its matching partner. On the remaining vertices the
+ matching is perfect and the hypothesis about cycles is preserved. Induction supplies an
+ independent transversal of the remaining pairs, and adjoining \(x\) proves the lemma.
+ The empty set provides the base case. Notice that cycles consisting only of edges of
+ \(D\) cause no difficulty. \end{proof}
+
+\begin{lemma}[Matching with bounded weight loss]\label{lem:weighted} Let \(m\ge1\) and
+ \(d\ge0\) be integers. Let \(G\) and \(D\) be graphs on the same finite vertex set,
+ with \(\alpha(G)\le m\) and \(\Delta(D)\le d\). Let \(w(v)\in[0,1]\) be vertex weights.
+ Fix an integer \(r\ge1\) and set \[
+B=\sum_{j=0}^{r}(d+1)^j.
+\] There is a matching \(M\subseteq E(G)\), with unmatched set \(X\), such that
+ \begin{equation}\label{eq:matchingloss}
+|X|\le m(B+1),\qquad
+\sum_{uv\in M}|w(u)-w(v)|\le m(B+1),
+\end{equation} and no cycle of length at most \(r+1\) in \(D+M\) contains an edge of
+ \(M\). Moreover, \(E(M)\cap E(D)=\varnothing\).
+
+\end{lemma}
+
+\begin{proof} Maintain a set of unprocessed vertices, initially \(V(G)\), and an
+ initially empty matching \(M\). Choose an unprocessed vertex \(v\) of maximum weight.
+ Its eligible partners are the other unprocessed vertices \(u\) such that \(uv\in E(G)\)
+ and the distance from \(u\) to \(v\) in the current graph \(D+M\) is greater than
+ \(r\). Vertices in different components have infinite distance. If an eligible partner
+ exists, choose one of maximum weight, insert \(uv\) into \(M\), and remove both
+ endpoints from the unprocessed set. Otherwise, put \(v\) into \(X\) and remove it from
+ the unprocessed set. Continue until all vertices have been processed. Throughout this
+ procedure, the graph used to measure distances retains the full vertex set; putting a
+ vertex in \(X\) only removes it from consideration as a future partner.
+
+At every stage the graph \(D+M\) has maximum degree at most \(d+1\), and its
+ radius-\(r\) balls have at most \(B\) vertices. Every inserted matching edge is a
+ nonedge of \(D\), because its endpoints have distance greater than \(r\ge1\).
+
+Suppose that the final graph has a cycle of length at most \(r+1\) containing a matching
+ edge. Consider the matching edge of this cycle inserted last. All remaining edges of
+ the cycle already existed when this edge was inserted, and form a path of length at
+ most \(r\) between its endpoints. This contradicts the insertion rule.
+
+Order the vertices of \(X\) by the time they were put aside. If \(x\in X\), every later
+ vertex of \(X\) that is a \(G\)-neighbor of \(x\) was ineligible when \(x\) was
+ processed. All these neighbors were therefore in the radius-\(r\) ball about \(x\) in
+ the graph \(D+M\) at that time. Consequently \(x\) has at most \(B\) later neighbors in
+ \(G[X]\). Greedy coloring in reverse order gives a proper coloring of \(G[X]\) with at
+ most \(B+1\) colors. Each color class has at most \(m\) vertices, since \(\alpha(G)\le
+ m\), and hence \[
+|X|\le m(B+1).
+\]
+
+For the weight estimate, fix a threshold \(a\in[0,1]\). Call an edge of \(M\) a crossing
+ edge if one endpoint has weight greater than \(a\) and the other has weight at most
+ \(a\). Let \(Y_a\) consist of the higher-weight endpoint of each crossing edge. For
+ every crossing edge \(vu\), the vertex selected first by the procedure is its
+ higher-weight endpoint \(v\), so \[
+w(v)>a\ge w(u).
+\] Order \(Y_a\) by the insertion times of its matching edges. When \(v\in Y_a\) was
+ processed, every later vertex \(y\in Y_a\) was still unprocessed and had weight greater
+ than \(a\), whereas the chosen partner \(u\) had weight at most \(a\). If \(vy\in
+ E(G)\), then \(y\) must have been ineligible, since an eligible \(y\) would have been
+ preferred to \(u\). Every later \(G\)-neighbor of \(v\) in \(Y_a\) was therefore in the
+ current radius-\(r\) ball about \(v\). Thus every vertex of \(G[Y_a]\) has at most
+ \(B\) later neighbors. As before, \(G[Y_a]\) is \((B+1)\)-colorable, so \[
+|Y_a|\le m(B+1).
+\] The matching has exactly \(|Y_a|\) crossing edges.
+
+Integrating over thresholds gives \[
+\begin{aligned}
+\sum_{uv\in M}|w(u)-w(v)|
+&=\int_0^1
+\bigl|\{uv\in M:\min(w(u),w(v))\le a<\max(w(u),w(v))\}\bigr|\,da\\
+&\le m(B+1).
+\end{aligned}
+\] This proves \eqref{eq:matchingloss}. \end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:robust}] Put \(H=G+F\). Choose an optimal
+ weight function \(w\) in~\eqref{eq:dual} for \(H\). Thus \[
+\sum_{v\in V(G)}w(v)=\chi_f(H),\qquad 0\le w(v)\le1.
+\] Apply Lemma~\ref{lem:weighted} to \(G\), \(D=F\), these weights, and \(r=2m-1\). Let
+ \(M\) be the resulting matching and let \(X\) be its unmatched set. Since \(M\subseteq
+ E(G)\), \[
+Q=(G-X)/M
+\] is a minor of \(G\). Here the quotient retains every edge arising from an edge of
+ \(G-X\), removing only loops and identifying parallel edges. Assign to the quotient
+ vertex corresponding to an edge \(uv\in M\) the weight \[
+z(uv)=\min\{w(u),w(v)\}.
+\]
+
+We claim that \(z\) is feasible in~\eqref{eq:dual} for \(Q\). Let \(S\) be any
+ independent set of \(Q\), and let \(U\) be the union of its matching pairs. There is no
+ \(G\)-edge between different pairs of \(S\), by the definition of this quotient.
+ Selecting one endpoint from each pair therefore gives an independent set in \(G\),
+ whence \[
+|S|\le m,\qquad |U|\le2m.
+\] Furthermore, \(G[U]\) consists exactly of the matching \(M[U]\).
+
+No cycle of \(F[U]+M[U]\) contains a matching edge: such a cycle would have length at
+ most \(|U|\le2m\), contrary to Lemma~\ref{lem:weighted}. Lemma~\ref{lem:transversal}
+ therefore gives a set \(T\subseteq U\) that is independent in \(F\) and contains
+ exactly one endpoint of every pair in \(S\). Since \(G[U]\) consists of the matching
+ pairs, \(T\) is also independent in \(G\), and hence in \(H\). Therefore \[
+\sum_{e\in S}z(e)\le\sum_{v\in T}w(v)\le1.
+\] This proves feasibility.
+
+Lemma~\ref{lem:weighted} now yields \[
+\begin{aligned}
+2\sum_{e\in M}z(e)
+&=\sum_{v\notin X}w(v)-\sum_{uv\in M}|w(u)-w(v)|\\
+&\ge\chi_f(H)-|X|-m(K+1)\\
+&\ge\chi_f(H)-2m(K+1).
+\end{aligned}
+\] By fractional-coloring duality, \[
+\chi_f(H)\le2\chi_f(Q)+2m(K+1).
+\] Finally, \eqref{eq:RS} and \(h(Q)\le h(G)\) imply \[
+\chi_f(H)\le4h(Q)+2m(K+1)\le4h(G)+2m(K+1),
+\] which is \eqref{eq:robust}. \end{proof}
+
+\subsection{Completing the proof}
+
+\begin{quantitativetheorem}
+For every graph $G$ and every $0<\varepsilon\le1$,
+\[
+ \chi(G)\le4h(G)+\varepsilon|G|+(100/\varepsilon)^{2000/\varepsilon^2}.
+\]
+\end{quantitativetheorem}
+\begin{proof}
+Fix $0<\varepsilon\le1$ and set
+\[
+ m=\lceil2/\varepsilon\rceil,\qquad r=m+2,\qquad
+ \gamma=\varepsilon/6,\qquad
+ \mu=\left(\frac{\varepsilon}{2400r^2}\right)^{20r}.
+\]
+Lemma~\ref{lem:rounding} gives the pair-load tolerance $\mu/4$ and order threshold
+\begin{equation}\label{eq:n0}
+ n_0=\left\lceil10^6r^4\mu^{-4}+12/\varepsilon\right\rceil.
+\end{equation}
+Since $m\ge2$, Lemma~\ref{lem:augmentation} applies. Every graph $G$ on $n\ge n_0$
+ vertices with $\alpha(G)\le m$ admits $F\subseteq\overline G$ such that
+\[
+ \Delta(F)\le d:=\left\lceil\frac{288\binom m2}{\mu\varepsilon^2}\right\rceil,
+ \qquad
+ \chi(G)\le\chi_f(G+F)+\varepsilon n/2.
+\]
+Proposition~\ref{prop:robust} now gives
+\[
+ \chi(G)\le4h(G)+\varepsilon n/2+A,
+\]
+where
+\[
+ A=\max\left\{n_0,\,
+ 2m\left(1+\sum_{j=0}^{2m-1}(d+1)^j\right)\right\}.
+\]
+The same inequality holds when $n<n_0$, since $\chi(G)\le n<n_0$. Thus it holds for
+ every graph of independence number at most $m$, including the empty graph.
+
+For an arbitrary graph $G$ on $n$ vertices, repeatedly remove a stable set of size
+ exactly $m+1$ while such a set exists. There are at most
+$n/(m+1)$ removed sets; let $J$ be the remaining induced subgraph. Then
+\[
+ \frac{n}{m+1}\le\frac{\varepsilon n}{2},
+ \qquad \alpha(J)\le m,\qquad h(J)\le h(G).
+\]
+Color the removed sets separately and apply the preceding bound to $J$. This gives
+\[
+ \chi(G)\le\frac{n}{m+1}+\chi(J)
+ \le\frac{\varepsilon n}{2}+4h(J)+\frac{\varepsilon |V(J)|}{2}+A
+ \le4h(G)+\varepsilon n+A.
+\]
+
+Finally, we bound that fully explicit expression. Put $R=100/\varepsilon$. Since
+ $m\le3/\varepsilon$ and $r\le5/\varepsilon$,
+\[
+ \mu^{-1}
+ =\left(\frac{2400r^2}{\varepsilon}\right)^{20r}
+ \le(60000\varepsilon^{-3})^{100/\varepsilon}
+ \le R^{300/\varepsilon}.
+\]
+The last step uses $60000\varepsilon^{-3}\le R^3$.
+Also, $\binom m2\le9/(2\varepsilon^2)$, so the ceiling in the
+definition of $d$ yields
+\[
+ d+1\le\frac{1298}{\varepsilon^4}\mu^{-1}
+ \le R^{304/\varepsilon}.
+\]
+Here $1298\varepsilon^{-4}\le R^{4/\varepsilon}$.
+Using $\sum_{j=0}^{2m-1}(d+1)^j\le2m(d+1)^{2m}$ and $2m\le6/\varepsilon$ gives
+\[
+ 2m\left(1+\sum_{j=0}^{2m-1}(d+1)^j\right)
+ \le\left(\frac6\varepsilon+\frac{36}{\varepsilon^2}\right)
+           (d+1)^{2m}
+ \le42\varepsilon^{-2}R^{1824/\varepsilon^2}
+ \le R^{1826/\varepsilon^2}.
+\]
+The final step uses $42\varepsilon^{-2}\le R^{2/\varepsilon^2}$.
+For the other term in $A$, \eqref{eq:n0} and $\varepsilon\le1$ give
+\[
+ n_0\le10^6(5/\varepsilon)^4R^{1200/\varepsilon}
+          +12/\varepsilon+1
+ \le\bigl(6.25\cdot10^8\varepsilon^{-4}
+           +13\varepsilon^{-1}\bigr)R^{1200/\varepsilon}
+ \le R^{1206/\varepsilon^2}.
+\]
+Therefore $A\le R^{2000/\varepsilon^2}$, which
+proves~\eqref{eq:quantitative}.
+
+\end{proof}
+
+
+
+\section{Proof of the exponent improvement}\label{sec:bootstrap}
+
+We prove Theorem~\ref{thm:bootstrap}. Packing connected induced
+bipartite subgraphs produces a smaller minor, which is colored using
+the assumed local bound. In the remainder, a short induced path
+localizes chromatic number whenever separation fails. The same local
+bound then supplies the separation needed for a recursive minor
+construction. The construction follows Delcourt and Postle, with the
+chromatic number of its routing subgraph controlling the cost of deletion.
+
+\subsection{Packing and localization}
+
+Let $b(G)$ be the largest order of a connected induced bipartite
+subgraph of $G$, with $b(\varnothing)=0$. This parameter is inherited
+by induced subgraphs. 
+
+The first reduction separates a union of bipartite subgraphs from a
+remainder in which $b$ is small.
+\begin{lemma}\label{lem:packing}
+For every graph $G$ and integer $k\ge2$, there is a partition
+$V(G)=W\mathbin{\dot\cup}R$ and a minor $Q$ of $G$ such that
+\[
+ |Q|\le\lfloor |G|/k\rfloor,\qquad b(G[R])<k,
+ \qquad \chi(G[W])\le2\chi(Q).
+\]
+\end{lemma}
+\begin{proof}
+Greedily choose disjoint sets of $k$ vertices inducing connected
+bipartite graphs, until no more can be chosen. Every connected graph
+of order at least $k$ has a connected induced subgraph of order exactly
+$k$: delete leaves of a spanning tree until $k$ vertices remain.
+Thus the remaining induced graph has $b<k$.
+Let $W$ be the union of the chosen sets. Contract each chosen set in
+$G[W]$ to obtain $Q$, retaining all adjacencies between different sets.
+A coloring of $Q$, together with a separate bipartition bit inside
+each contracted set, is a coloring of $G[W]$ with at most $2\chi(Q)$
+colors. The empty packing is allowed.
+\end{proof}
+
+When chromatic separation fails, the next lemma localizes the excess
+chromatic number in the closed neighborhood of a short induced path.
+
+\begin{lemma}\label{lem:path}
+Let $q\ge1$ and $k\ge2$ be integers. Suppose that $b(G)\le k$,
+$\chi(G)\ge q$, and $G$ has no two vertex-disjoint subgraphs of chromatic
+number at least $q$. Then there is an induced path $P$ of order at most
+$k$ such that, with $J=G[N_G[V(P)]]$,
+\[
+ \chi(G-V(J))\le q-1,\qquad
+ \alpha(J)\le k(k-1),\qquad
+ \chi(J)\ge\chi(G)-q+1.
+\]
+Here $N_G[X]$ denotes $X$ together with all vertices having a neighbor in $X$.
+\end{lemma}
+\begin{proof}
+At most one component of any induced subgraph of $G$ has chromatic
+number at least $q$, since two such components would violate the
+hypothesis. Let $C_0$ be the unique such component of $G$, and choose
+$v_1\in V(C_0)$.
+
+We grow an induced path $P_i=v_1\cdots v_i$. If all components of
+$G-N_G[V(P_i)]$ have chromatic number less than $q$, we stop.
+Otherwise let $C_i$ be its unique component of chromatic number at
+least $q$. The construction will ensure that $C_i$ is contained in
+$C_{i-1}$ and that $v_i$ has a neighbor in $C_{i-1}$ when $i\ge2$.
+For $i=1$, connectivity of $C_0$ supplies a vertex
+$v_2\in N_G(v_1)$ adjacent to $C_1$.
+For $i\ge2$, the component $C_i$ is a component of
+$C_{i-1}-N_G(v_i)$. It is a proper subset, because $v_i$ has a neighbor
+in $C_{i-1}$. Since $C_{i-1}$ is connected, there is a vertex
+\[
+ v_{i+1}\in V(C_{i-1})\cap N_G(v_i)
+\]
+adjacent to $C_i$. This vertex lies outside the closed neighborhoods
+of $v_1,\ldots,v_{i-1}$, so the extended path is induced.
+Every component discarded earlier had chromatic number less than
+$q$; deleting further vertices cannot increase that number.
+Hence any surviving component of chromatic number at least $q$
+lies in $C_i$, establishing the invariant at the next step.
+
+An induced path is bipartite, so the process cannot extend to $k+1$
+vertices. At termination its closed neighborhood therefore has the
+required complement. Also $\alpha(G[N_G[v]])\le k-1$ for every vertex
+$v$: a stable set of $k$ neighbors would form an induced star of order
+$k+1$, and a stable set in the closed neighborhood containing $v$
+has order one. Taking the union of the closed neighborhoods of the
+at most $k$ path vertices gives $\alpha(J)\le k(k-1)$.
+Finally $\chi(G)\le\chi(J)+\chi(G-V(J))$ gives the last inequality.
+\end{proof}
+
+The fractional bound~\eqref{eq:RS} converts the independence bound
+into an order bound. If $(x_S)$ is an optimal fractional coloring of
+$H$, summing its covering constraints gives
+\begin{equation}\label{eq:order}
+ |H|\le\sum_S|S|x_S
+ \le\alpha(H)\sum_Sx_S
+ =\alpha(H)\chi_f(H)
+ \le2\alpha(H)h(H).
+\end{equation}
+This lets us turn a local coloring bound into chromatic separation.
+
+\begin{lemma}\label{lem:separation}
+Suppose every $K_u$-minor-free graph of order at most $2uk^2$ has
+chromatic number at most $du$, where $u,d,k$ are positive integers and
+$k\ge2$. If $Y$ is $K_u$-minor-free, $b(Y)\le k$, and $\chi(Y)>du$,
+then $Y$ has two vertex-disjoint induced subgraphs, each of chromatic
+number at least $\chi(Y)-du$.
+\end{lemma}
+\begin{proof}
+If the asserted pair does not exist, apply Lemma~\ref{lem:path} with
+$q=\chi(Y)-du\ge1$. The resulting induced graph $J$ satisfies
+\[
+ \alpha(J)\le k(k-1),\qquad
+ \chi(J)\ge\chi(Y)-(\chi(Y)-du)+1=du+1.
+\]
+It is $K_u$-minor-free, so \eqref{eq:order} gives
+\[
+ |J|\le2\alpha(J)h(J)
+ \le2k(k-1)(u-1)<2uk^2.
+\]
+This contradicts the assumed local bound.
+\end{proof}
+
+\subsection{Connectivity tools and a hub of bounded chromatic number}
+
+We state the results needed for the recursive construction. All references
+to Delcourt and Postle use the numbering in~\cite{DP}.
+Graphs are finite and simple, $|H|=|V(H)|$, and logarithms are natural.
+A graph is $r$-connected if it has more than $r$ vertices and remains
+connected after deleting fewer than $r$ vertices. We denote its vertex
+connectivity by $\kappa(H)$ and its minimum degree by $\delta(H)$.
+A $K_r$ model consists of $r$ pairwise disjoint nonempty connected branch
+sets, every two of which are joined by an edge. It is rooted at $r$
+specified distinct vertices if each branch set contains its corresponding
+root. A linkage is a family of pairwise vertex-disjoint paths joining
+prescribed pairs. A path from a set $U$ to a disjoint set $V$ meets these
+sets only at its corresponding ends. For a path family $\mathcal P$ or
+a model $\mathcal M$, write $V(\mathcal P)$ or $V(\mathcal M)$ for the
+union of its vertex sets.
+
+The first theorem restores connectivity after vertices have been deleted.
+\begin{theorem}[Gir\~ao--Narayanan, {\cite[Theorem~5.1]{DP}}]
+\label{thm:connectivity}
+Let $r\ge1$ be an integer. Every graph $H$ with $\chi(H)\ge7r$
+contains an $r$-connected subgraph $H'$ with
+$\chi(H')\ge\chi(H)-6r$.
+\end{theorem}
+We may take the induced closure of $H'$, since this preserves connectivity
+and cannot decrease its chromatic number.
+
+We use Menger's theorem and the following quantitative linkedness result.
+\begin{theorem}[Thomas--Wollan, {\cite[Theorem~5.6 and the following remark]{DP}}]
+\label{thm:linked}
+Let $\ell\ge1$ be an integer. Every $10\ell$-connected graph contains
+a linkage joining any prescribed $\ell$ pairs of distinct terminals.
+\end{theorem}
+
+A sufficiently large complete minor also supplies prescribed roots.
+\begin{lemma}[Kawarabayashi, {\cite[Lemma~5.14]{DP}}]\label{lem:rooted}
+Let $r\ge1$ be an integer. Every $r$-connected graph containing a
+$K_{2r}$ minor has a $K_r$ model rooted at any $r$ specified distinct
+vertices.
+\end{lemma}
+
+For the initial scale we use the density theorem and its coloring
+consequence~\eqref{eq:ktcolor}, stated before the proof of
+Theorem~\ref{thm:linear}.
+
+The next lemma supplies a hub whose deletion has bounded chromatic cost.
+\begin{lemma}\label{lem:hub}
+Let $r\ge1$ be an integer. If $\chi(H)\ge7r$, then $H$ has an
+induced $r$-connected subgraph $H_0$ with $\chi(H_0)\le7r$.
+\end{lemma}
+\begin{proof}
+Delete vertices one at a time to obtain an induced subgraph $X$ with
+$\chi(X)=7r$. Apply Theorem~\ref{thm:connectivity} to $X$ and take the
+induced closure of the resulting subgraph.
+\end{proof}
+
+To join the hub to both the prescribed terminals and the remaining graph,
+we use Delcourt and Postle's redundancy lemma.
+\begin{lemma}[Delcourt--Postle, {\cite[Lemma~5.3]{DP}}]
+\label{lem:redundancy}
+Let $A_1,A_2,B$ be disjoint nonempty vertex sets in a graph $H$.
+For each $i\in\{1,2\}$, suppose that $H-A_{3-i}$ contains $2|A_i|$
+paths from $A_i$ to $B$, pairwise disjoint outside $A_i$, with exactly
+two paths starting at each vertex of $A_i$.
+Then $H$ contains $|A_1|+|A_2|$ pairwise vertex-disjoint paths from
+$A_1\cup A_2$ to $B$.
+\end{lemma}
+
+We record the consequence used below.
+\begin{lemma}\label{lem:fan}
+Let $a\ge1$ be an integer, and let $Z,U,V$ be disjoint vertex sets
+in a graph, with $|Z|=7a$. Suppose there are $14a$ paths from $Z$ to
+$V$, two from each vertex of $Z$, disjoint outside $Z$ and avoiding
+$U$, and $2a$ disjoint paths from $U$ to $V$ avoiding $Z$.
+Then there are $8a$ disjoint paths to $V$, one from each vertex of
+$Z$ and $a$ from distinct vertices of $U$, with all interiors outside
+$Z\cup U\cup V$.
+\end{lemma}
+\begin{proof}
+Work in the subgraph consisting of the given paths and their edges.
+Pair the $2a$ starting vertices in $U$ of the second path family.
+For each pair add a new vertex adjacent to its two members, and let
+$A_2$ be the set of the $a$ new vertices. Extending the second path
+family by these edges gives two paths from each vertex of $A_2$ to
+$V$, disjoint outside $A_2$ and avoiding $Z$. The first family avoids
+$A_2$. Lemma~\ref{lem:redundancy}, with $A_1=Z$ and $B=V$, gives
+$8a$ disjoint paths, one from each vertex of $Z\cup A_2$.
+
+Delete the new starting vertices. Vertices of $U$ have degree at most one
+in the union of the original paths, so they cannot be internal vertices
+of the resulting paths. The other exclusions hold by construction.
+\end{proof}
+
+We use the rooted convention of~\cite[Definition~5.12]{DP}.
+For integers $a\ge1$ and $b\ge0$, a graph is \emph{$(a,b)$-woven} if,
+for any distinct roots $r_1,\ldots,r_a$ and terminal pairs
+$(s_1,t_1),\ldots,(s_b,t_b)$, with different pairs having no common
+terminal but allowing $s_i=t_i$, it contains a $K_a$ model rooted at
+the roots and a linkage for the pairs whose vertex intersection is
+exactly the roots that are also terminals. A singleton pair is represented
+by a path of length zero. Roots may coincide with terminals.
+
+The following form of the weaving lemma includes the containment
+properties established in its cited proof.
+\begin{lemma}[Delcourt--Postle, {\cite[Lemma~5.15 and its proof]{DP}}]
+\label{lem:weave}
+Let $a,b\ge1$ be integers. Let $H$ be an $(a,b)$-woven subgraph of a
+graph $F$, with $|H|\ge a+2b$, and let $R\subseteq V(H)$ have size
+$a$. If $\mathcal P$ is a linkage in $F$ for $b$ pairs with all $2b$
+terminals distinct, then there are a $K_a$ model $\mathcal M$ in
+$H$ rooted at $R$ and a linkage $\mathcal P'$ for the same pairs such that
+\[
+ V(\mathcal P')\subseteq V(\mathcal P)\cup V(H),\qquad
+ V(\mathcal P')\cap V(\mathcal M)\subseteq R\cap V(\mathcal P).
+\]
+\end{lemma}
+
+The following simultaneous form follows from Delcourt and Postle's
+linkage rerouting argument~\cite[Claim~7.1.1]{DP}.
+\begin{lemma}
+\label{lem:simultaneous}
+Let $a$ be a positive integer divisible by three, and put $a'=2a/3$.
+Suppose that a graph $F$ contains disjoint $(a',2a)$-woven subgraphs
+$J_1,J_2,J_3$, each of order at least $a'+4a$.
+Let $s_1,\ldots,s_{2a}$ be distinct vertices outside their union, and
+let $t_1,\ldots,t_{2a}$ be distinct vertices such that
+\[
+ T_i=\{t_{(i-1)a'+1},\ldots,t_{ia'}\}\subseteq V(J_i)
+ \quad(i=1,2,3).
+\]
+If $F$ has a linkage for the pairs $(s_j,t_j)$, then it has a linkage
+$\mathcal P$ for the same pairs and $K_{a'}$ models $\mathcal M_i$
+in $J_i$, rooted at $T_i$, such that
+$V(\mathcal P)\cap V(\mathcal M_i)=T_i$ for $i=1,2,3$.
+\end{lemma}
+\begin{proof}
+Starting with the given linkage, apply Lemma~\ref{lem:weave} to
+$J_1,J_2,J_3$ in that order, always with all $2a$ terminal pairs.
+At each application, the linkage meets the new model only at roots
+that were already on the linkage. All $a'$ roots in $T_i$ are
+endpoints of its paths, so the intersection is exactly $T_i$.
+The new linkage lies in the union of the previous one and $J_i$.
+Since the three subgraphs are disjoint, rerouting in $J_i$ cannot
+create an intersection with either of the models constructed earlier.
+Their roots remain on the linkage as endpoints.
+\end{proof}
+
+\subsection{The outer recursion with a separation hypothesis}
+
+For a nonnegative integer $s$, a graph $Y$ is
+\emph{$s$-chromatic-separable} if it has two vertex-disjoint subgraphs,
+each of chromatic number at least $\chi(Y)-s$
+\cite[Definition~2.4]{DP}. We may require these subgraphs to be induced
+by taking their induced closures.
+
+The next lemma adapts the proof of~\cite[Theorem~7.1]{DP}.
+Here separation is a hypothesis, and Lemma~\ref{lem:hub} bounds the
+chromatic cost of the hub. The linkage and weaving steps are supplied
+by the results stated above.
+\begin{lemma}\label{lem:outer}
+Let $T\ge100$ be a power of three and let $d\ge1$ be an integer.
+Suppose that a graph $G$ has the following property: for every integer
+scale $a=(2/3)^iT>T/\sqrt{\log T}$, where $i\ge0$, every induced
+$K_{14a}$-minor-free subgraph $Y$ of $G$ with $\chi(Y)>28da$ is
+$14da$-chromatic-separable.
+Put
+\[
+ K=10000,\qquad A=2000,\qquad B=10^6(d+1).
+\]
+For every integer scale $a=(2/3)^iT$ with $i\ge0$, each induced subgraph $F$ of $G$
+with $\kappa(F)\ge Ka$ and $\chi(F)\ge AT+Ba$ is $(a,3a)$-woven.
+\end{lemma}
+\begin{proof}
+We induct on $a$ among the integer scales. We first separate any
+coincident roots and terminals. Let $Z_0$ be the set of vertices
+occupying these roles, so $|Z_0|\le7a$. Greedily choose a distinct
+neighbor outside $Z_0$ for each of the $7a$ roles, including both
+roles of a singleton pair; this is possible since $\delta(F)>14a$.
+Call these new vertices the proxies, and put $F_0=F-Z_0$. Then
+\[
+ \kappa(F_0)\ge(K-7)a,\qquad
+ \chi(F_0)\ge AT+(B-7)a.
+\]
+A model and linkage for the distinct proxies extend to the original
+vertices by their chosen edges. For a singleton pair, discard its
+proxy path and use its original vertex. Since $F_0$ avoids $Z_0$,
+this gives exactly the permitted root--terminal intersections.
+
+If $F_0$ contains a $K_{14a}$ minor, Lemma~\ref{lem:rooted} gives
+a $K_{7a}$ model rooted at all the proxies, since
+$\kappa(F_0)\ge7a$. Retain its $a$ root branches, and join each pair
+of terminal branches by an edge and paths inside those branches.
+This gives the required model and linkage.
+In particular, this applies when $a\le T/\sqrt{\log T}$, because
+\[
+ 840a\sqrt{\log(14a)}+1
+ \le840T\sqrt{\frac{\log(14T)}{\log T}}+1
+ \le840T\sqrt{1+\frac{\log14}{\log100}}+1
+ <2000T
+\]
+for $T\ge100$, and~\eqref{eq:ktcolor} forces a $K_{14a}$ minor
+in $F_0$. We may therefore assume that $a>T/\sqrt{\log T}$ and
+that $F_0$ is $K_{14a}$-minor-free.
+
+\medskip\noindent\emph{Linking through a hub.}
+Let $Z$ be the set of $7a$ proxies. Apply Lemma~\ref{lem:hub} in
+$F_0-Z$ with $r=140a$ to obtain an induced subgraph $H_0$ with
+\[
+ \kappa(H_0)\ge140a,\qquad \chi(H_0)\le980a.
+\]
+The hypothesis holds because $\chi(F_0-Z)\ge AT+(B-14)a\ge980a$.
+Since $\kappa(F_0)\ge(K-7)a\ge14a$ and $|H_0|\ge14a$,
+Menger's theorem,
+with each source in $Z$ replaced by two copies, gives $14a$ paths
+from $Z$ to $H_0$, two from each source and disjoint outside $Z$.
+Choose each path induced by shortcutting it. The graph induced by
+their union has chromatic number at most $28a$, using a separate
+two-color palette for each path.
+
+Delete $Z$, $H_0$, and these paths from $F_0$, and apply
+Theorem~\ref{thm:connectivity} with $r=Ka$ to the remaining induced
+graph. Its chromatic number is at least $AT+(B-1022)a>7Ka$.
+We obtain an induced subgraph $F_3$ with
+\[
+ \kappa(F_3)\ge Ka,\qquad
+ \chi(F_3)\ge AT+(B-1022-6K)a.
+\]
+
+It suffices to prove that $F_3$ is $(a,0)$-woven. To see this, apply
+Menger's theorem in $F_0-Z$ to find $2a$ disjoint paths
+from $F_3$ to $H_0$; the host is at least $2a$-connected because
+$\kappa(F_0-Z)\ge(K-14)a\ge2a$, and both
+endpoint sets have size at least $2a$. The earlier double fan avoids
+$F_3$, so Lemma~\ref{lem:fan} gives $8a$ disjoint paths to $H_0$,
+one from each proxy and $a$ from distinct vertices of $F_3$, with
+interiors outside these endpoint sets. Root a $K_a$ model in $F_3$
+at the latter ends. By Theorem~\ref{thm:linked}, the hub has a
+linkage pairing its $8a$ ends as required: $3a$ pairs connect the
+terminal paths, and $a$ pairs connect the root paths to the paths
+from $F_3$. This applies since $\kappa(H_0)\ge140a\ge10(4a)$.
+The unions give the required model and linkage in $F_0$.
+
+\medskip\noindent\emph{Separating and applying induction.}
+Fix distinct roots $r'_1,\ldots,r'_a$ in $F_3$. Since
+$\delta(F_3)\ge Ka$, choose distinct vertices $s_1,\ldots,s_{2a}$
+outside the roots so that $s_j,s_{a+j}$ are adjacent to $r'_j$.
+Delete these $3a$ vertices to obtain $F_4$. Apply the separation
+hypothesis to $F_4$ and then to one of the two resulting induced
+subgraphs, obtaining three disjoint induced subgraphs $J_1,J_2,J_3$.
+All these graphs are $K_{14a}$-minor-free. The two applications
+are valid because
+\[
+ \chi(F_4)\ge AT+(B-1025-6K)a,
+ \qquad B-1025-6K-14d>28d.
+\]
+The first separation costs at most $14da$, so the input to the
+second has chromatic number at least
+$AT+(B-1025-6K-14d)a>28da$. A second loss of at most $14da$
+leaves each of the three graphs with
+$\chi(J_i)\ge AT+(B-1025-6K-28d)a>7Ka$.
+Apply Theorem~\ref{thm:connectivity} inside each $J_i$ with $r=Ka$
+and take induced closures to obtain $J'_1,J'_2,J'_3$.
+
+The total chromatic loss for each child is at most
+\[
+ \underbrace{7a+7a}_{\text{original vertices and proxies}}
+ +\underbrace{980a+28a}_{\text{hub and paths}}
+ +\underbrace{12Ka}_{\text{connectivity}}
+ +\underbrace{3a}_{\text{roots and neighbors}}
+ +\underbrace{28da}_{\text{separation}}.
+\]
+Adding these costs gives
+$7+7+980+28+3+28d+12K=1025+28d+12K$.
+Consequently
+\begin{equation}\label{eq:childbudget}
+ \kappa(J'_i)\ge Ka,\qquad
+ \chi(J'_i)\ge AT+(B-1025-28d-12K)a
+             \ge AT+B(2a/3),
+\end{equation}
+where the last inequality follows from $B/3>1025+28d+12K$.
+The next scale $a'=2a/3$ is integral: if $T=3^m$, then the integer
+scales are $(2/3)^iT$ for $0\le i\le m$, and the last is
+$2^m\le3^m/\sqrt{m\log3}=T/\sqrt{\log T}$.
+This inequality holds for $m\ge5$ (check $m=5$, then use that
+$(2/3)^m\sqrt{m\log3}$ decreases). Thus every nonbase scale
+occurs before the last integer scale. Induction and~\eqref{eq:childbudget} imply that each
+$J'_i$ is $(a',3a')=(a',2a)$-woven.
+
+\medskip\noindent\emph{Assembling the rooted model.}
+Choose $a'$ distinct targets in each child, indexed as
+$t_1,\ldots,t_{2a}$ in three consecutive blocks of length $a'$.
+The graph $F_3-\{r'_1,\ldots,r'_a\}$ has connectivity at least
+$(K-1)a\ge20a$. Theorem~\ref{thm:linked} therefore supplies a
+linkage from $s_j$ to $t_j$ for $1\le j\le2a$.
+Since $|J'_i|\ge Ka+1\ge a'+4a$, Lemma~\ref{lem:simultaneous}
+supplies a linkage for the same pairs and rooted $K_{a'}$ models
+in the children, meeting the linkage exactly at their targets.
+
+For each $j\in\{1,\ldots,a\}$, unite $r'_j$, its two chosen
+neighbor edges, the paths indexed $j$ and $a+j$, and the child
+branches containing $t_j$ and $t_{a+j}$. These sets are disjoint
+and connected. Each uses two different children, because the two
+target indices differ by $a$, exceeding the child block length $2a/3$.
+Any two two-element subsets of the three children intersect, and
+the corresponding distinct branches in a common child are adjacent.
+The resulting sets form a $K_a$ model rooted at the chosen roots.
+Thus $F_3$ is $(a,0)$-woven, completing the induction.
+\end{proof}
+
+\begin{corollary}\label{cor:outer}
+Let $t\ge100$ be an integer, and let $T$ be the least power of three
+with $T\ge t$. If a $K_t$-minor-free graph $G$ satisfies the
+separation hypothesis of Lemma~\ref{lem:outer} for this $T$ and an
+integer $d\ge1$, then
+\[
+ \chi(G)<3\bigl(10^6(d+1)+62000\bigr)t.
+\]
+\end{corollary}
+\begin{proof}
+Let $A,B,K$ be the constants in Lemma~\ref{lem:outer}. If
+$\chi(G)\ge(A+B+6K)T$, Theorem~\ref{thm:connectivity} gives an
+induced $KT$-connected subgraph $F$ with $\chi(F)\ge(A+B)T$;
+its hypothesis holds since $A+B+6K\ge7K$.
+Lemma~\ref{lem:outer}, at scale $a=T$, gives a $K_T$ minor,
+contradicting $K_t$-minor-freeness. Now use $T<3t$ and $A+6K=62000$.
+\end{proof}
+\subsection{Completing the proof}
+
+\begin{bootstraptheorem}
+If a local linear bound holds at exponent $\alpha>0$, then a local
+linear bound holds at exponent $4\alpha/3$.
+\end{bootstraptheorem}
+\begin{proof}
+Let $D,t_0$ be constants for the bound at exponent $\alpha$, and
+increase $D$ to an integer.
+For sufficiently large $t$, let $G$ be $K_t$-minor-free with
+$|G|\le t(\log t)^{4\alpha/3}$, and put
+\[
+ k=\left\lceil(\log t)^{\alpha/3}\right\rceil\ge2.
+\]
+Lemma~\ref{lem:packing} gives $W,R,Q$ with
+\[
+ |Q|\le\frac{|G|}{k}
+ \le\frac{t(\log t)^{4\alpha/3}}{(\log t)^{\alpha/3}}
+ =t(\log t)^\alpha.
+\]
+Since $Q$ is $K_t$-minor-free,
+the bound at exponent $\alpha$ gives $\chi(G[W])\le2Dt$.
+
+Write $H=G[R]$. We have $b(H)<k$. Let $T$ be the least power of three
+at least $t$. At every nonbase scale of Lemma~\ref{lem:outer}, put
+$u=14a$. Uniformly throughout these scales,
+\[
+ \frac{14T}{\sqrt{\log T}}<u\le14T,
+ \qquad
+ \log u>\log(14T)-\tfrac12\log\log T
+ \ge\tfrac12\log t
+\]
+for all sufficiently large $t$. Moreover,
+$k\le2(\log t)^{\alpha/3}$, so
+\[
+ 2k^2\le8(\log t)^{2\alpha/3}
+ \le\left(\tfrac12\log t\right)^\alpha
+ \le(\log u)^\alpha.
+\]
+The middle inequality holds eventually because $\alpha/3>0$.
+Increasing the lower threshold for $t$ if needed, we have, uniformly
+in this window,
+\[
+ u\ge t_0.
+\]
+The bound at exponent $\alpha$ therefore colors every $K_u$-minor-free graph
+on at most $2uk^2$ vertices with at most $Du$ colors.
+Now let $Y$ be an induced $K_u$-minor-free subgraph of $H$ with
+$\chi(Y)>28Da=2Du$. Since $b(Y)\le b(H)<k$, we can apply
+Lemma~\ref{lem:separation} to $Y$. It gives two disjoint induced
+subgraphs with chromatic number at least
+$\chi(Y)-Du=\chi(Y)-14Da$. This verifies the separation
+hypothesis of Lemma~\ref{lem:outer} with $d=D$ at every nonbase scale.
+
+Corollary~\ref{cor:outer} now gives
+\[
+ \chi(H)<3\bigl(10^6(D+1)+62000\bigr)t.
+\]
+Color $W$ and $R$ with disjoint palettes. We obtain
+\[
+ \chi(G)\le\left[2D+3\bigl(10^6(D+1)+62000\bigr)\right]t.
+\]
+Both uses of a local coloring bound, on $Q$ and on the small
+neighborhood cores, used exponent $\alpha$. This proves
+Theorem~\ref{thm:bootstrap}.
+\end{proof}
+
+\begin{thebibliography}{99}
+\setlength{\itemsep}{2pt}
+\bibitem{DP} M.~Delcourt and L.~Postle,
+\emph{Reducing linear Hadwiger's conjecture to coloring small graphs},
+Journal of the American Mathematical Society 38 (2025), 481--507.
+We use the numbering in arXiv:2108.01633v5.
+\url{https://arxiv.org/abs/2108.01633v5}.
+\bibitem{EGJ} S.~Ehard, S.~Glock, and F.~Joos,
+\emph{Pseudorandom hypergraph matchings},
+Combinatorics, Probability and Computing 29 (2020), 868--885.
+\url{https://doi.org/10.1017/S0963548320000280}.
+\bibitem{GN} A.~Gir\~ao and B.~Narayanan,
+\emph{Subgraphs of large connectivity and chromatic number},
+Bulletin of the London Mathematical Society 54 (2022), 868--875.
+\url{https://doi.org/10.1112/blms.12569}.
+\bibitem{GK} S.~Gould and T.~Kelly,
+\emph{Advancing the R\"odl nibble: new bounds on matchings and the
+list chromatic index of hypergraphs},
+arXiv:2511.11375v1 (2025).
+\url{https://arxiv.org/abs/2511.11375v1}.
+\bibitem{Gyarfas} A.~Gy\'arf\'as,
+\emph{Problems from the world surrounding perfect graphs},
+Zastosowania Matematyki 19 (1987), 413--441.
+\bibitem{Had} H.~Hadwiger,
+\emph{\"Uber eine Klassifikation der Streckenkomplexe},
+Vierteljahrsschrift der Naturforschenden Gesellschaft in Z\"urich
+88 (1943), 133--142.
+\bibitem{KKMO} D.~Y.~Kang, D.~K\"uhn, A.~Methuku, and D.~Osthus,
+\emph{New bounds on the size of nearly perfect matchings in almost
+regular hypergraphs},
+Journal of the London Mathematical Society (2) 108 (2023), 1701--1746.
+\url{https://doi.org/10.1112/jlms.12792}.
+\bibitem{Kos} A.~V.~Kostochka,
+\emph{Lower bound of the Hadwiger number of graphs by their average degree},
+Combinatorica 4 (1984), 307--316.
+\url{https://doi.org/10.1007/BF02579141}.
+\bibitem{Lin} X.~Lin,
+\emph{An asymptotically tight $t\log t$ bound for $k$-connected subgraphs
+in dense $K_t$-minor-free graphs},
+arXiv:2607.21222v3 (2026).
+\url{https://arxiv.org/abs/2607.21222v3}.
+\bibitem{LL} C.-H.~Liu and J.~Luo,
+\emph{Beyond halfway to Hadwiger's conjecture},
+arXiv:2609.06867v2 (2026).
+\url{https://arxiv.org/abs/2609.06867v2}.
+\bibitem{N} T.~H.~Nguyen,
+\emph{Highly connected subgraphs with large chromatic number},
+arXiv:2206.00561v2 (2023).
+\url{https://arxiv.org/abs/2206.00561v2}.
+\bibitem{NPS} S.~Norin, L.~Postle, and Z.-X.~Song,
+\emph{Breaking the degeneracy barrier for coloring graphs with no
+$K_t$ minor}, Advances in Mathematics 422 (2023), 109020.
+\url{https://doi.org/10.1016/j.aim.2023.109020}.
+\bibitem{RS} B.~Reed and P.~Seymour,
+\emph{Fractional colouring and Hadwiger's conjecture},
+Journal of Combinatorial Theory, Series B 74 (1998), 147--152.
+\url{https://cgm.cs.mcgill.ca/~breed/SummerNSERC04/frachad.pdf}.
+\bibitem{RST} N.~Robertson, P.~Seymour, and R.~Thomas,
+\emph{Hadwiger's conjecture for $K_6$-free graphs},
+Combinatorica 13 (1993), 279--361.
+\url{https://doi.org/10.1007/BF01202354}.
+\bibitem{Rodl} V.~R\"odl,
+\emph{On a packing and covering problem},
+European Journal of Combinatorics 6 (1985), 69--78.
+\url{https://doi.org/10.1016/S0195-6698(85)80023-8}.
+\bibitem{TW} R.~Thomas and P.~Wollan,
+\emph{An improved linear edge bound for graph linkages},
+European Journal of Combinatorics 26 (2005), 309--324.
+\url{https://doi.org/10.1016/j.ejc.2004.02.013}.
+\bibitem{Tho} A.~Thomason,
+\emph{An extremal function for contractions of graphs},
+Mathematical Proceedings of the Cambridge Philosophical Society
+95 (1984), 261--265.
+\url{https://doi.org/10.1017/S0305004100061521}.
+\bibitem{Wag} K.~Wagner,
+\emph{\"Uber eine Eigenschaft der ebenen Komplexe},
+Mathematische Annalen 114 (1937), 570--590.
+\url{https://doi.org/10.1007/BF01594196}.
+\end{thebibliography}
+\end{document}
