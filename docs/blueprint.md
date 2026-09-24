@@ -126,3 +126,96 @@ has no other cited external graph theorem in its proof. Delcourt--Postle and
 other later external results are dependencies of Theorem 1; their Lean proof
 strategies remain to be determined. No external result has been assumed as
 an axiom in the Lean source.
+
+
+## Active Theorem 2 parallel implementation
+
+The durable task assignment, dependency order, and resumption log are in
+`docs/theorem2-plan.md`. The first checked milestone is exact vertex-load
+normalization for the pair-constrained LP. The hypergraph representation will
+use a finite edge-copy index type; probability results will be polymorphic in
+that index type. The augmentation lane may prove a conditional theorem from
+an explicit rounding hypothesis, which will be discharged when the rounding
+module is checked. The graph lane will use `SimpleGraph.edist` for distance
+exclusion and a concrete matching contraction minor.
+
+## Intermediate-statement simplification (user guidance, 2026-09-24)
+
+The final Lean theorem should preserve the paper's stated bound, but helper
+lemmas may use stronger or slacker hypotheses and conclusions. In particular,
+the augmentation module now offers
+exists_boundedDegree_augmentation_of_cap: any natural degree cap above the
+real estimate suffices. This lets later arguments use convenient integer
+caps without carrying exact ceilings through combinatorial proofs. Matching,
+rounding, and robust-bound interfaces should similarly expose only the
+inequalities needed downstream. Keep real error budgets until an actual
+finite cardinality or coloring count requires a natural number.
+
+## Checked assembly checkpoint (2026-09-24)
+
+Quantitative/Peeling.lean checks maximal disjoint stable-set peeling and a
+bounded-independence-to-arbitrary-graph theorem. Quantitative/Constants.lean
+checks the bounded-independence assembly under explicit rounding and robust
+fractional-coloring assumptions, then the exact final Theorem 2 inequality
+under the bounded-independence hypothesis and `A <= Aepsilon`. The numerical
+chain now proves `mu^(-1) <= (100/epsilon)^(300/epsilon)` and
+`d+1 <= (100/epsilon)^(304/epsilon)` for `0 < epsilon <= 1`.
+The current root `lake build` passed (3335 jobs). Theorem 2 itself remains
+unformalized until the matching, rounding, robust greedy trace, and final
+constant estimate are discharged.
+
+## Explicit constant and support lemmas (2026-09-24)
+
+`Quantitative/Constants.lean` now proves `A_le_Aepsilon`, preserving the
+paper's exact real exponent. Its intermediate bounds are
+`n0 <= (100/epsilon)^(1208/epsilon^2)` and
+`robustAdditive <= (100/epsilon)^(1826/epsilon^2)`; their extra slack removes
+unneeded floor/ceiling arithmetic. `Quantitative/Theorem2.lean` checks
+`quantitative_bound_of_rounding_and_robust`, a theorem with explicit
+bounded-independence rounding and robust-fractional assumptions for every
+finite graph of the current universe. Those assumptions are pending proofs,
+not axioms.
+
+`Quantitative/Recurrence.lean` checks a finite survivor/deficit/waste sum.
+`Quantitative/BackwardPotential.lean` checks nonnegative backward weights,
+terminal and step identities, and a quadratic bound on the initial survivor
+weight. `Quantitative/UnionBound.lean` checks the strict exponential union
+budget with the centered Chernoff exponent `mu^2*n/256`. These standalone
+lemmas are built and available to the matching and rounding lanes.
+
+## Matching schedule and robust bridge (2026-09-24)
+
+The matching iteration now has a checked concrete application in
+`Quantitative/MatchingApplication.lean`. The integer degree caps are
+`matchingD D0 r xi 0 = D0` and
+`matchingD D0 r xi (i+1) = floor(exp(-(r-1)a) * D_i)`, while all error
+estimates are stated over real numbers. A direct invariant
+`B <= b * D_i` absorbs every floor loss; it follows from
+`b*T <= 1` and avoids a separate geometric error sum. The paper's
+small parameter gives `b <= a/4`, hence `a*D_i >= 4`. This is enough
+for the per-round floor consequences used by the finite matching theorem.
+The initial deficit is exposed as a minimum-degree condition, which is
+the form produced by the sampled hypergraph.
+
+The robust fractional coloring input is checked unconditionally in
+`Coloring/RobustFractional.lean` and matched to the paper's exact
+additive term by `Quantitative/RobustBridge.lean`. Consequently
+`Quantitative/Theorem2.lean` now needs only the universal
+low-codegree rounding inequality. The paper's final numerical
+`Aepsilon` bound has already been checked; proving that rounding
+inequality is the remaining logical gate for Theorem 2.
+## Theorem 2 checked completion (2026-09-24)
+
+`HadwigerLean.Theorem2.quantitative_bound` in
+`Quantitative/Theorem2FinalBridge.lean` is the unconditional checked
+formalization of paper Theorem 2. It states
+`chromatic G <= 4 * cliqueMinorNumber G + epsilon * |V| +
+Aepsilon epsilon` for every finite graph and `0 < epsilon <= 1`;
+`Aepsilon` is defined as `(100/epsilon)^(2000/epsilon^2)`.
+`Quantitative/RoundingBridge.lean` discharges the low-codegree
+rounding input, and `Quantitative/RobustBridge.lean` discharges the
+robust fractional input. The root `lake build` passed (3436 jobs).
+There are no proof placeholders or new axiom declarations in the
+Theorem 2 modules. The earlier conditional assembly checkpoints above
+record the development path and should not be read as the current
+proof status.
