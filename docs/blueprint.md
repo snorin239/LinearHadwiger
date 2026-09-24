@@ -7,7 +7,7 @@ formalization goal; Theorem 1 remains the final objective.
 | --- | --- | --- |
 | Theorem 1 (thm:linear) | To be chosen | Unformalized |
 | Theorem 2 (thm:quantitative) | quantitative_bound | Unformalized; first goal |
-| Reed--Seymour (1.3), eq:RS | reed_seymour_bound | Unformalized; proof required |
+| Reed--Seymour (1.3), eq:RS | ReedSeymour.reed_seymour_bound | Checked for every finite simple graph, including the empty graph |
 | Exponent bootstrap (thm:bootstrap) | To be chosen | Unformalized |
 
 ## Theorem 2 dependency map
@@ -42,8 +42,8 @@ bipartite connector and maximal support produce the decomposition.
 
 ## Proposed dependency-ordered Lean modules
 
-Paths are relative to HadwigerLean/. Rows 1-9 are checked; later rows are
-proposed. Independent modules may be built concurrently.
+Paths are relative to HadwigerLean/. Checked modules and remaining proof
+obligations are distinguished below. Independent modules may be built concurrently.
 
 | Order | Module | Main contents |
 | --- | --- | --- |
@@ -56,11 +56,16 @@ proposed. Independent modules may be built concurrently.
 | 7 | Coloring/PairLoad.lean | Unordered nonedge loads, exact primal/dual LP maps, and attained equal optima; imports 4-5. Checked. |
 | 8 | Coloring/IntegralComparison.lean | The bound chi_f(G) <= chi(G) from nonempty color classes. Checked. |
 | 9 | Graph/TouchingQuotient.lean | Connected partition quotient and clique-minor lift; imports 2. Checked. |
-| 10 | Graph/SimplicialElimination.lean | Hereditary simplicial elimination and coloring by clique number; imports 1. |
-| 11 | ReedSeymour/Egg.lean | Yolks, eggs, partial decompositions, support and bipartite half-weight yolks; imports 9-10. |
-| 12 | ReedSeymour/Parity.lean | Odd induced-path obstruction and bipartite minimal connector; imports 11. |
-| 13 | ReedSeymour/Decomposition.lean | Star quotient, two quotient updates, maximal support and all-egg decomposition; imports 12. |
-| 14 | ReedSeymour/Bound.lean | Weighted stable-set bound, then chi_f(G) <= 2 h(G), including the empty graph; imports 2, 6 and 13. |
+| 10 | Graph/SimplicialElimination.lean; Graph/CliqueMinor.lean | Hereditary simplicial elimination, clique-number coloring, relabeling and simplicial-set extension; cliqueNum <= cliqueMinorNumber. Checked. |
+| 11 | ReedSeymour/Egg.lean; Absorption.lean | Real-weight yolks and eggs; half-weight bipartition yolks; no-cross union and bipartite connector absorption. Checked. |
+| 12 | ReedSeymour/FiniteAveraging.lean; QuotientWeight.lean; LPBridge.lean | Color-class averaging, stable-set extraction from a colored egg partition, and LP-dual conversion to chi_f <= 2h. Checked. |
+| 13 | ReedSeymour/Parity.lean; ParityStems.lean; ParityConclusion.lean | Odd-cycle gates, joined induced odd connector, and minimal connected transversal without odd connectors -> bipartite. Checked. |
+| 14 | ReedSeymour/Partial.lean; Initial.lean | Partial egg invariant, relabeling, initial component partition, and maximal-support selection. Checked. |
+| 14a | ReedSeymour/Decomposition.lean | Abstract and concrete central split, quotient PEO preservation, strict support growth, minimal terminal-hitting connector, and induced-graph minimality bridge. Checked. |
+| 14b | ReedSeymour/Fusion.lean; PathBipartite.lean; ConnectorLift.lean | Odd-path parity classes, ambient connector transport, absorption into a neighboring egg, quotient update, and strict support growth. Checked. |
+| 14c | ReedSeymour/Reindex.lean; Strategy.lean | Finite relabeling and the complete no-odd-connector improvement branch. Checked. |
+| 14d | ReedSeymour/Bound.lean; Maximal.lean; Conclusion.lean | Weighted stable-set bridge, empty-graph case, maximal-support contradiction, and conditional assembly. Checked. |
+| 14e | ReedSeymour/Theorem.lean | Discharges the odd-connector improvement hypothesis and proves the unconditional fractional bound. Checked. |
 | 15 | Hypergraph/Indexed.lean | Uniform multihypergraphs with indexed edge copies, degree, codegree and matching. |
 | 16 | Probability/FiniteBernoulli.lean | Independent marking, survival and moment formulas, concentration. |
 | 17 | Hypergraph/AlmostPerfectMatching.lean | Parameter inequalities, one-round deficit/waste, iteration and lem:matching; imports 15-16. |
@@ -73,6 +78,25 @@ proposed. Independent modules may be built concurrently.
 
 Import Quantitative/Theorem2 from HadwigerLean.lean only when it checks.
 Theorem 1's bootstrap and other later external inputs are subsequent work.
+
+## Reed--Seymour proof
+
+The unconditional theorem `ReedSeymour.reed_seymour_bound` in
+`ReedSeymour/Theorem.lean` proves `fractionalChromaticNumber G ≤ 2 *
+cliqueMinorNumber G` for every finite simple graph, including the empty
+graph. It is imported by `HadwigerLean.lean` and checked by `lake build`.
+
+The proof follows Reed and Seymour's maximal-support egg decomposition.
+A minimum connected terminal-hitting set is either bipartite, giving a new
+egg by splitting the central block, or it contains an odd induced terminal
+path. In the latter case, a neighboring egg absorbs that path; the fused
+quotient retains simplicial elimination and egg support grows. Finite
+maximality therefore yields an all-egg decomposition. Quotient coloring,
+weighted yolks, and the checked finite LP duality give the fractional bound.
+
+The paper uses rational vertex weights; Lean uses real weights because the
+existing fractional-coloring dual is real-valued. The egg argument applies
+to finite real sums and order without changing the combinatorial proof.
 
 ## Modeling choices to validate in Lean
 

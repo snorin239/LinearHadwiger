@@ -78,6 +78,7 @@ theorem isClosed_primalSublevel (r : ℝ) : IsClosed (P.primalSublevel r) := by
   exact P.isClosed_primalFeasible.inter
     (isClosed_le P.continuous_primalValue continuous_const)
 
+omit [Fintype Row] in
 /-- Strictly positive costs make every primal sublevel compact. -/
 theorem isCompact_primalSublevel (hc : ∀ j, 0 < P.c j) (r : ℝ) :
     IsCompact (P.primalSublevel r) := by
@@ -92,6 +93,7 @@ theorem isCompact_primalSublevel (hc : ∀ j, 0 < P.c j) (r : ℝ) :
     exact Finset.single_le_sum
       (fun k _ => mul_nonneg (le_of_lt (hc k)) (hx.1.1 k)) (Finset.mem_univ j)
   exact (le_div_iff₀ (hc j)).2 (by simpa [mul_comm] using hsingle.trans hx.2)
+omit [Fintype Row] in
 /-- A feasible covering LP with strictly positive costs attains its minimum. -/
 theorem exists_primal_minimizer (hc : ∀ j, 0 < P.c j)
     {x₀ : Col → ℝ} (hx₀ : P.PrimalFeasible x₀) :
@@ -129,6 +131,7 @@ noncomputable def toFin : Problem Row (Fin (Fintype.card Col)) where
   b := P.b
   c j := P.c ((Fintype.equivFin Col).symm j)
 
+omit [Fintype Row] in
 private theorem toFin_row_sum (x : Fin (Fintype.card Col) → ℝ) (i : Row) :
     (∑ j, P.toFin.A i j * x j) =
       ∑ j, P.A i j * x ((Fintype.equivFin Col) j) := by
@@ -140,6 +143,7 @@ private theorem toFin_row_sum (x : Fin (Fintype.card Col) → ℝ) (i : Row) :
       (fun j : Col => P.A i j * x (e.symm j))
       (fun j => by simp))
 
+omit [Fintype Row] in
 theorem toFin_primal_iff (x : Fin (Fintype.card Col) → ℝ) :
     P.toFin.PrimalFeasible x ↔
       P.PrimalFeasible (fun j => x ((Fintype.equivFin Col) j)) := by
@@ -169,6 +173,7 @@ theorem toFin_dual_iff (y : Row → ℝ) :
     refine ⟨hy.1, fun j => ?_⟩
     simpa [toFin] using hy.2 ((Fintype.equivFin Col).symm j)
 
+omit [Fintype Row] in
 theorem toFin_primalValue (x : Fin (Fintype.card Col) → ℝ) :
     P.toFin.primalValue x =
       P.primalValue (fun j => x ((Fintype.equivFin Col) j)) := by
