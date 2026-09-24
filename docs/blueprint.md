@@ -240,3 +240,50 @@ There are no proof placeholders or new axiom declarations in the
 Theorem 2 modules. The earlier conditional assembly checkpoints above
 record the development path and should not be read as the current
 proof status.
+
+## Theorem 4 and Corollary 24 proof architecture (2026-09-24)
+
+The mathematical working manuscript is
+docs/theorem4-corollary24-proof.md. It is a proof document, not Lean
+code or a checked theorem. Its two endpoint deductions share one
+outer induction on scales a = (2/3)^i T and the up-to-b woven
+property W(a,b;X). The paper-to-Lean mapping should use a finite
+family of terminal pairs with cardinality at most b; the published
+exactly-b formulation is only equivalent after an order/padding
+argument, and several recursive uses have fewer than b paths.
+
+Both endpoints use the additive Girão–Narayanan connected high-chromatic
+hub and the same low-scale clique-minor density base. Corollary 24 then
+uses its assumed chromatic separability; Theorem 4 derives that
+separability through Delcourt–Postle's chromatic-inseparable argument.
+The shared rooted-minor-to-woven construction tests connectivity and
+minor existence after deleting all occupied original roles and
+assigning distinct neighbor proxies. A minor in the undeleted graph
+alone is insufficient for that construction.
+
+The manuscript contains standalone proofs of the set Menger theorem,
+the additive Girão–Narayanan theorem, the needed Mader
+density-to-connectivity lemma, Kawarabayashi's rooted clique-minor
+lemma, the Norin–Postle unbalanced bipartite bound, and
+16k-connectivity implying k-linkedness. It also proves the
+quantitative clique-minor density bound with coefficient 30
+(Appendix E) and a rooted density theorem with threshold
+12c+5000h (Appendix F), which replaces the cited Wollan theorem
+for the parameters needed here. The appendices discharge all
+non-elementary mathematical leaves used by the two endpoints.
+Independent adversarial audits checked the quantitative and
+rooted-minor appendices; the status of the manuscript is a
+self-contained **mathematical** proof, not a Lean proof.
+
+The Lean implementation should preserve the shared W(a,b;X)
+interface and first establish the common finite Menger and
+rooted-clique-minor infrastructure. The density and rooted-minor
+proofs are substantial later modules; Appendix F's massed-pair
+invariant and rigid truncation should be explicit reusable
+interfaces. The manuscript records repairs to the printed
+Delcourt–Postle base case, up-to-b use, woven parameter range,
+singleton knitting stage, linkage containment, and final
+constants. Neither endpoint should be marked formally proved
+in Lean until all of these arguments have been implemented
+without placeholders. No Lean source was changed for this
+documentation checkpoint.
