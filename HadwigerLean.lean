@@ -43,10 +43,11 @@ import HadwigerLean.Deduction.Corollary24CompleteAudit
 import HadwigerLean.Graph.SmallConnected.Theorem
 import HadwigerLean.Woven.Knitting
 import HadwigerLean.Woven.UniformSparseFinal
+import HadwigerLean.Inseparability.CIComplete
 
 /-!
 Root module for the formalization of `paper/main.tex`.
 The unconditional Reed--Seymour theorem and Theorem 2 are checked.
 The checked Appendix F rooted-density theorem, sharp uniform woven theorem,
-and small connected subgraph theorem are imported here.
+small connected subgraph theorem, and chromatic inseparability are imported here.
 -/

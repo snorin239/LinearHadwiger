@@ -504,3 +504,24 @@ These results use finite simple graphs and explicit induced-subgraph
 transport throughout. Focused Lake builds and axiom audits show no
 placeholders or new axioms.
 
+
+## Checked chromatic inseparability (Stage 6, 2026-09-25)
+
+Inseparability/CIComplete.lean proves
+chromatic_separable_of_local_bound_complete unconditionally. The
+local chromatic hypothesis is imposed on induced vertex sets of size
+at most ciCoefficient times t times (log t)^4, where
+ciCoefficient = 943718400000000. The output is chromatic separability
+at ciChromaticBudget t s = ciCoefficient times t times (1+s).
+
+The checked CI construction uses r = ceiling(sqrt(log t)) stages,
+x = ceiling(t/sqrt(log t)) roots per stage, piece connectivity
+9000000 t, and a piece order bound from the small connected subgraph
+theorem. The initial stage has its own rooted-clique connector; the
+later stages use sharp uniform wovenness on each packed piece.
+StageSharpBudget.lean verifies the required one-million-times
+clique-matching scale bound for every stage, and CIComplete.lean
+applies woven_of_sharp_connectivity to discharge that last premise.
+The checked stage invariant records the disjoint child pieces,
+linkage rerouting, model assembly, and color reserve.
+
