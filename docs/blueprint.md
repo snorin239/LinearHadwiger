@@ -525,3 +525,22 @@ applies woven_of_sharp_connectivity to discharge that last premise.
 The checked stage invariant records the disjoint child pieces,
 linkage rerouting, model assembly, and color reserve.
 
+
+## Checked Theorem 4 (Stage 7, 2026-09-25)
+
+Deduction/Theorem4Proof.lean proves theorem4_proved :
+Theorem4Statement. Theorem4CIInput_sharp converts the local-window
+fourth power from the natural exponent in CI to the real exponent in
+the original Theorem 4 contract, then supplies the unconditional CI
+theorem. Theorem4CompleteOfCI.lean applies the same checked outer
+woven induction as Corollary 24 and obtains the exact maximum-ratio
+form of the paper statement.
+
+Theorem4Scale.lean and SubgraphRatioBridge.lean transport the maximum
+over arbitrary subgraphs through induced hosts; the small-order and
+large-order cases for the ratio window are handled separately.
+The final coefficient and cutoff are both C = 3^9 ciCoefficient.
+The theorem retains the existing universe-polymorphic
+Theorem4Statement in Deduction/ExternalInputs.lean, including its
+supremum over the displayed arbitrary-subgraph ratio set.
+
