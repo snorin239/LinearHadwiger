@@ -1,5 +1,10 @@
 # Theorem 4 and Corollary 24: proof and formalization plan
 
+> **Historical plan.** The status and pending tasks below describe an
+> earlier development stage. Theorem 4 and Corollary 24 have since been
+> proved unconditionally in Lean. See [FORMALIZATION.md](../FORMALIZATION.md)
+> for the current checked endpoints.
+
 Status (2026-09-24): this is a dependency and implementation plan, **not** a
 self-contained proof or a checked Lean proof. The completed mathematical
 proof manuscript is [the companion document](theorem4-corollary24-proof.md);

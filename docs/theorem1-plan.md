@@ -1,5 +1,10 @@
 # Conditional Theorem 1 milestone
 
+> **Historical plan.** This document records the earlier conditional
+> Theorem 1 milestone. Theorem 1, Theorem 4, and Corollary 24 have since
+> been proved unconditionally in Lean. See [FORMALIZATION.md](../FORMALIZATION.md)
+> for the current checked endpoints.
+
 This plan covers a Lean proof of paper Theorem 1 (`thm:linear`,
 `paper/main.tex:80-83`) from the already checked Theorem 2, assuming exactly
 paper Theorem 4 (`thm:dp`, lines 212-227) and Corollary 24 (`cor:outer`,

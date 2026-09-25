@@ -1,5 +1,10 @@
 # Theorem 2 implementation plan and resume log
 
+> **Historical plan and resume log.** Theorem 2 is now proved unconditionally
+> in Lean. The baseline and pending tasks below record earlier development
+> stages. See [FORMALIZATION.md](../FORMALIZATION.md) for the current checked
+> endpoint and its paper-to-Lean mapping.
+
 Source: paper/main.tex, Theorem 2 (thm:quantitative, lines 184-190) and proof
 (lines 278-946). The checked target is the same explicit real bound
 

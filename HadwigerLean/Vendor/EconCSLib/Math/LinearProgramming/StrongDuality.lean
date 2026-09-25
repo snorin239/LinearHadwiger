@@ -1,6 +1,9 @@
 /-
 Copyright (c) 2026 EconCSLib contributors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
+
+Modified for HadwigerLean: changed the internal import to the
+HadwigerLean.Vendor namespace.
 -/
 
 import HadwigerLean.Vendor.EconCSLib.Math.LinearAlgebra.Farkas

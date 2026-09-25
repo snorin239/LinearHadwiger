@@ -1,5 +1,10 @@
 # Formalization blueprint
 
+> **Development history.** This blueprint retains chronological checkpoints,
+> including earlier conditional and incomplete stages. Theorem 1, Theorem 2,
+> Theorem 4, and Corollary 24 are now checked unconditionally. See
+> [FORMALIZATION.md](../FORMALIZATION.md) for the current checked endpoints.
+
 Source: paper/main.tex and paper/main.pdf. Theorem 2 is checked. The
 conditional Theorem 1 deduction is checked with exactly paper Theorem 4
 and Corollary 24 as explicit hypotheses; neither input is proved here.

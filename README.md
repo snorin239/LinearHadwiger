@@ -147,3 +147,19 @@ vendored EconCSLib files for Fourier--Motzkin elimination, Farkas' lemma,
 and linear-programming strong duality. Their source revision and
 Apache-2.0 attribution are recorded in the
 [vendored README](HadwigerLean/Vendor/EconCSLib/README.md).
+
+## License
+
+Copyright 2026 Sergey Norin, except for third-party material attributed to
+its respective copyright holders.
+
+The project's Lean code, build files, and repository documentation are
+licensed under the [Apache License 2.0](LICENSE). The paper in `paper/`,
+including its LaTeX source and PDF, is separately licensed under
+[Creative Commons Attribution 4.0 International (CC BY 4.0)](paper/LICENSE).
+
+The vendored EconCSLib files retain their upstream copyright and
+[Apache-2.0 license](HadwigerLean/Vendor/EconCSLib/LICENSE). Their
+[README](HadwigerLean/Vendor/EconCSLib/README.md) records the source revision
+and modifications; the applicable upstream notice is preserved in
+[NOTICE](HadwigerLean/Vendor/EconCSLib/NOTICE).

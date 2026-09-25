@@ -6,11 +6,15 @@ They are licensed under Apache 2.0; see [LICENSE](LICENSE). Copyright remains
 with the 2026 EconCSLib contributors. The copyright/license header is preserved
 in each Lean file.
 
+The applicable upstream notice from the same revision is preserved in
+[NOTICE](NOTICE).
+
 Original paths:
 
 - `EconCSLib/Math/LinearAlgebra/FourierMotzkin.lean`
 - `EconCSLib/Math/LinearAlgebra/Farkas.lean`
 - `EconCSLib/Math/LinearProgramming/StrongDuality.lean`
 
-Only the two internal imports were changed to their `HadwigerLean.Vendor`
-paths. Mathematical declarations and namespaces remain as in upstream.
+The internal imports in `Farkas.lean` and `StrongDuality.lean` were changed
+to their `HadwigerLean.Vendor` paths. Both modified files carry a notice in
+their headers. Mathematical declarations and namespaces remain as in upstream.
