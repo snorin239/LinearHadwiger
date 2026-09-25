@@ -30,7 +30,7 @@ theorem cor24_outerAt_top
   let hh : ℕ → ℕ := fun i => 980 * Woven.outerScale m i
   let ss : ℕ → ℕ := fun i => 14 * d * Woven.outerScale m i
   have hlast : (Woven.outerScale m m : ℝ) ≤ cutoff := by
-    exact cor24_outerScale_last_le_top_div_sqrt_log m T hT hT100
+    exact cor24_outerScale_last_le_top_div_sqrt_log m T hT (by omega)
   have hbase : Woven.OuterAt G m m 10000 (2000 * T) (cor24B d) := by
     intro F hconn hχ
     exact cor24_base_woven (G.induce (F : Set V)) T d

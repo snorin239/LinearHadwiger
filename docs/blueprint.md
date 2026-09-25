@@ -1,35 +1,103 @@
 # Formalization blueprint
 
-Source: paper/main.tex and paper/main.pdf. Theorem 2 is the first major
-formalization goal; Theorem 1 remains the final objective.
+Source: paper/main.tex and paper/main.pdf. Theorem 2 is checked. The
+conditional Theorem 1 deduction is checked with exactly paper Theorem 4
+and Corollary 24 as explicit hypotheses; neither input is proved here.
 
-| Paper result | Proposed Lean result | Status |
+| Paper result | Lean result | Status |
 | --- | --- | --- |
-| Theorem 1 (thm:linear) | `linear_of_theorem4_corollary24`; public branch-set wrapper | Unformalized; conditional milestone planned |
-| Theorem 2 (thm:quantitative) | `Theorem2.quantitative_bound`; Mathlib-facing wrapper planned | Checked internally; public wrapper pending |
-| Reed--Seymour (1.3), eq:RS | ReedSeymour.reed_seymour_bound | Checked for every finite simple graph, including the empty graph |
-| Exponent bootstrap (thm:bootstrap) | `LocalLinearBound` improvement from Corollary 24 | Unformalized |
+| Theorem 1 (thm:linear) | `Deduction.linear_of_theorem4_corollary24`; `Deduction.linear_mathlib_of_theorem4_corollary24` | Lean checked, conditional on exactly the two named paper inputs. Repository-wide `lake build` passed (3460 jobs). |
+| Theorem 2 (thm:quantitative) | `Theorem2.quantitative_bound`; `Deduction.quantitative_bound_mathlib` | Checked internally and in the Mathlib-facing form. |
+| Reed--Seymour (1.3), eq:RS | `ReedSeymour.reed_seymour_bound` | Checked for every finite simple graph, including the empty graph. |
+| Exponent bootstrap (thm:bootstrap) | `Bootstrap.local_linear_bound_step_of_path`; `Bootstrap.path_localization` | Both checked; the final deduction discharges the path hypothesis using `path_localization`. |
 
-## Conditional Theorem 1 milestone
+## Conditional Theorem 1 implementation
 
-The next milestone derives Theorem 1 from the checked Theorem 2 while taking
-paper Theorem 4 (Delcourt--Postle small-graph reduction) and Corollary 24
-(outer recursion bound) as explicit theorem hypotheses, not global Lean
-axioms. The deduction also formalizes connected-bipartite packing,
-induced-path localization, chromatic separation, and the exponent
-bootstrap. Theorem 5 is unnecessary for this conditional deduction:
-a sufficiently-large-t linear bound extends to all t >= 2 by
-monotonicity of clique-minor order and a larger absolute constant.
+`Deduction/ExternalInputs.lean` defines faithful propositions for Theorem 4
+(the Delcourt--Postle small-graph reduction) and Corollary 24 (the outer
+recursion bound). They are theorem arguments, not global Lean axioms.
+`Bootstrap.path_localization` proves the remaining graph lemma. The
+intermediate `Deduction.linear_of_theorem4_corollary24_of_path` retains
+that lemma as a visible third hypothesis; the final theorem in
+`Deduction/ConditionalTheorem1.lean` supplies its checked proof and has
+only `Theorem4Statement` and `Corollary24Statement` as inputs.
 
-The public Theorem 1 statement will conclude G.Colorable (C * t) and
-expand the absence of a K_t minor into connected, disjoint, pairwise
-touching branch sets. The pinned Mathlib has no graph-minor predicate.
-A Mathlib-facing Theorem 2 wrapper will use G.chromaticNumber and the
-explicit numeric term. Checked bridges connect both public statements
-to the internal graph-minor and chromatic-number APIs.
+The public linear theorem concludes `G.Colorable (C * t)` and expands
+absence of a `K_t` minor into the nonexistence of connected, pairwise
+disjoint, pairwise touching branch sets indexed by `Fin t`. The pinned
+Mathlib has no graph-minor predicate. The checked Theorem 2 wrapper uses
+`ENat.toNat G.chromaticNumber` and the explicit additive term
+`(100 / epsilon) ^ (2000 / epsilon ^ 2)`. Both public statements have
+proved bridges to the internal minor and chromatic-number APIs.
 
-The dependency order, four work lanes, input interfaces, and completion
-checks are recorded in [theorem1-plan.md](theorem1-plan.md).
+`Deduction/Audit.lean` passes `assert_no_sorry` for the final internal and
+public conditional theorems. Its `#print axioms` reports only
+`propext`, `Classical.choice`, and `Quot.sound`. Theorem 5 is unnecessary
+for this deduction: the checked finite-order extension uses monotonicity
+of clique-minor order and enlarges the absolute constant.
+
+The dependency order and acceptance checks are recorded in
+[theorem1-plan.md](theorem1-plan.md).
+
+## Theorem 1 paper-to-Lean map (2026-09-24)
+
+The two external hypotheses have exact named interfaces in
+`Deduction/ExternalInputs.lean`:
+
+- Paper Theorem 4 (`thm:dp`, `paper/main.tex:212-227`) is
+  `Theorem4Statement`. One integer `C_DP >= 1` occurs both in
+  `chi(G) <= C_DP * t * (1 + f(G,t))` and in the order cutoff
+  `|H| <= C_DP * a * (log a)^4`. The ratio set includes zero and ranges
+  over arbitrary `H : G.Subgraph`, not only induced subgraphs, with
+  `t / sqrt(log t) <= a <= t` and no `K_a` minor. Its `sSup` is a
+  maximum: `theorem4RatioSet_finite` and `theorem4MaxRatio_mem` are
+  checked. `theorem4_elimination` proves the pointwise form used in the
+  final deduction.
+- Paper Corollary 24 (`cor:outer`, `paper/main.tex:1382-1398`) is
+  `Corollary24Statement`. It requires `t >= 100`, `d >= 1`, and `T`
+  to be the least power of three at least `t`. `IsOuterScale T a`
+  means `3^i * a = 2^i * T` for some natural `i`.
+  `OuterSeparation G T d` quantifies over every such integer scale
+  `a > T / sqrt(log T)` and every induced `Y`: if `Y` has no
+  `K_(14a)` minor and `chi(Y) > 28da`, then it is
+  `14da`-chromatic-separable. The conclusion keeps the strict bound
+  `chi(G) < 3 * (10^6 * (d+1) + 62000) * t`.
+
+The internal deduction follows the paper with these checked mappings:
+
+| Paper step | Lean declarations | Mapping |
+| --- | --- | --- |
+| Theorem 2 (`thm:quantitative`, lines 184-190) | `Theorem2.quantitative_bound`; `Deduction.quantitative_bound_mathlib` | The latter uses Mathlib's `chromaticNumber`, expanded branch-set exclusion, and the literal `A_epsilon` expression. `quantitative_bound_mathlib_at_minor_number` recovers the paper's `h(G)` form. |
+| Packing lemma (`lem:packing`, lines 968-987) | `Bootstrap.exists_packing` | Produces `W,R,Q`, a quotient minor `Q`, `|Q| <= |G|/k`, `chi(G[W]) <= 2 chi(Q)`, and no connected bipartite induced `k`-set in `G[R]`. |
+| Path localization (`lem:path`, lines 992-1038) | `Bootstrap.path_localization` | Checked in the numerical form used by separation; packing supplies its stronger exact-`k` exclusion. |
+| Order inequality (equation `eq:order`) | `Bootstrap.card_le_twice_independence_mul_cliqueMinorNumber` | Uses the checked Reed--Seymour bound to prove `|H| <= 2 alpha(H) h(H)`. |
+| Separation lemma (`lem:separation`, lines 1044-1071) | `Bootstrap.chromatic_separable_of_path_localization` | Checked with an explicit path-localization hypothesis; the separation conclusion uses `ChromaticSeparable`. |
+| Bootstrap theorem (`thm:bootstrap`, lines 202-205 and 1420-1463) | `Bootstrap.local_linear_bound_step_of_path` | Checked with `h24` and `hpath`; takes exponent `alpha > 0` to `4 alpha/3` and coefficient `2D + 3(10^6(D+1)+62000)`. |
+| Final deduction (`thm:linear`, lines 247-272) | `Deduction.initial_local_bound`, `local_bound_iterate`, `linear_of_theorem4_corollary24` | Theorem 2 gives an initial `6t` local bound at exponent `1/3`; nine steps exceed exponent four; Theorem 4 gives a large-order bound. `extend_linear_bound_from_large_orders` handles `2 <= t` by clique-minor order monotonicity. |
+
+`NoLargeConnectedBipartite G k` excludes an induced connected bipartite
+set of exactly `k` vertices. This is the strict `b(G) < k` conclusion of
+the packing lemma. The current `PathLocalizationStatement` uses this
+stronger hypothesis than paper Lemma 13's `b(G) <= k`. It records only
+the two numerical conclusions needed downstream: a closed-neighborhood
+core with independence number at most `k(k-1)` and complement chromatic
+number below `q`. It omits the induced-path witness and the lower bound
+on the core's chromatic number; the latter follows from the checked
+palette inequality in the separation proof. The closed-neighborhood,
+high-component, and boundary-extension helpers are present in
+`Bootstrap/Path.lean`. The universal theorem `path_localization`
+now proves `PathLocalizationStatement`; the final two-input theorem
+applies it to discharge the intermediate `hpath` hypothesis.
+
+`Graph/MinorFree.lean` checks the equivalence between `HasCliqueMinor`
+and the public connected, disjoint, pairwise touching branch-set
+condition, as well as monotonicity in the minor order.
+`Deduction/PublicLinearBridge.lean` translates the internal linear
+bound to `SimpleGraph.Colorable` without a `DecidableEq` parameter in
+the public theorem type. `Deduction/Audit.lean` passes `assert_no_sorry` for both the intermediate
+three-input assembly and the final two-input internal and public theorems.
+Its `#print axioms` reports only `propext`, `Classical.choice`, and
+`Quot.sound`. No global axiom declares either external result.
 
 ## Theorem 2 dependency map
 
@@ -97,8 +165,9 @@ obligations are distinguished below. Independent modules may be built concurrent
 | 22 | Quantitative/Constants.lean | Arithmetic estimates for mu, n0, d, K and the stated A_epsilon. |
 | 23 | Quantitative/Theorem2.lean | Bounded-independence case, stable-set removal and exact Theorem 2 bound; imports 19, 21 and 22. |
 
-Import Quantitative/Theorem2 from HadwigerLean.lean only when it checks.
-Theorem 1's bootstrap and other later external inputs are subsequent work.
+`Quantitative/Theorem2FinalBridge.lean` and the completed Theorem 2
+modules are imported from `HadwigerLean.lean`.
+Theorem 1 bootstrap and deduction modules are mapped in the preceding section.
 
 ## Reed--Seymour proof
 
@@ -142,14 +211,18 @@ to finite real sums and order without changing the combinatorial proof.
 
 ## External results and dependencies
 
-Reed--Seymour is part of this first milestone and is not an axiom. Theorem 2
-has no other cited external graph theorem in its proof. Delcourt--Postle and
-other later external results are dependencies of Theorem 1; their Lean proof
-strategies remain to be determined. No external result has been assumed as
-an axiom in the Lean source.
+Reed--Seymour and Theorem 2 are checked Lean theorems, not axioms.
+Theorem 4 and Corollary 24 are the two explicit, unproved external
+propositions for the conditional Theorem 1 milestone. The path-localization
+lemma is an internal checked theorem, and the final two-input theorem
+uses it. No external result is assumed by a global
+axiom in the Lean source.
 
 
-## Active Theorem 2 parallel implementation
+## Historical Theorem 2 implementation checkpoints
+
+The following checkpoints record development stages and are superseded by
+the checked completion reported at the end of this section.
 
 The durable task assignment, dependency order, and resumption log are in
 `docs/theorem2-plan.md`. The first checked milestone is exact vertex-load
@@ -181,9 +254,9 @@ fractional-coloring assumptions, then the exact final Theorem 2 inequality
 under the bounded-independence hypothesis and `A <= Aepsilon`. The numerical
 chain now proves `mu^(-1) <= (100/epsilon)^(300/epsilon)` and
 `d+1 <= (100/epsilon)^(304/epsilon)` for `0 < epsilon <= 1`.
-The current root `lake build` passed (3335 jobs). Theorem 2 itself remains
-unformalized until the matching, rounding, robust greedy trace, and final
-constant estimate are discharged.
+At that checkpoint the root `lake build` passed (3335 jobs), but Theorem 2
+still needed the matching, rounding, robust greedy trace, and final
+constant estimate. These obligations were discharged later.
 
 ## Explicit constant and support lemmas (2026-09-24)
 
@@ -288,6 +361,61 @@ in Lean until all of these arguments have been implemented
 without placeholders. No Lean source was changed for this
 documentation checkpoint.
 
+### Dependency-ordered Lean module plan
+
+The following proposed paths are relative to `HadwigerLean/`. Reuse the
+checked `Graph/Finite.lean`, `Graph/Minor.lean`,
+`Graph/MinorFree.lean`, `Graph/TouchingQuotient.lean`,
+`Bootstrap/Definitions.lean`, `Bootstrap/Palette.lean`, and
+`Deduction/ExternalInputs.lean`. The endpoint declarations must prove
+the existing universe-polymorphic `Deduction.Theorem4Statement` and
+`Deduction.Corollary24Statement` without changing their statements.
+
+| Order | Proposed modules | Checked output and dependencies |
+| --- | --- | --- |
+| 1. Finite graph API | `Graph/VertexConnectivity.lean`, `Graph/IndexedLinkage.lean`, `Graph/FiniteFlow.lean` -> `Graph/SetMenger.lean`; `Graph/Contraction.lean`, `Graph/RootedMinor.lean`, `Graph/DensityBasic.lean`, `Graph/MassedPair.lean`, `Probability/FiniteSampling.lean` | Vertex deletion and separations; indexed paths including singleton paths; terminal-permitting Menger and minimum-cut saturation; contraction and minor-model lifting; edge-incidence counts and finite averaging. Rooted models extend the existing `MinorModel`. |
+| 2. Common proved inputs | `Graph/ChromaticConnectivity/{Template,Theorem}.lean`, `Graph/DensityConnectivity.lean`, `Graph/RootedCliqueMinor.lean`, `Graph/Linkedness/{Massed,Core,Theorem}.lean`, `Graph/CliqueDensity/{Reduction,SmallOrders,RandomBranches,Theorem}.lean` | Prove additive Girão--Narayanan (GN), the needed Mader form, Kawarabayashi's rooted clique-minor theorem (KR), `16k`-connected implies `k`-linked (L), and the coefficient-30 clique-minor density theorem (KT). The modules within each brace group are ordered as listed. These close Appendices A, B, D, and E. |
+| 3. Shared woven induction | `Woven/Basic.lean` -> `Woven/CommonLemmas.lean` -> `Woven/OuterScales.lean` -> `Woven/OuterInduction.lean` | Define `W(a,b;X)` for at most `b` indexed terminal pairs. Prove normalized rooted-minor construction, double and mixed fans, rerouting, three-child assembly, integer scale recurrence, and Section 4's induction under explicit hub, separation, base, and numerical-budget hypotheses. Import GN, L, KR, KT, and Menger; do not import SC or CI. |
+| 4. Corollary 24 | `Deduction/Corollary24Proof.lean` | Specialize the shared induction using `OuterSeparation`, `K=10000`, `A=2000`, `B=10^6(d+1)`, the GN hub of cost `980a`, and the normalized KT base. Prove `Corollary24Statement` with its strict bound. |
+| 5. Theorem 4 auxiliaries | `Graph/UnbalancedBipartite/{NearComplete,Bound}.lean` -> `Graph/SmallConnected/{Trimming,Theorem}.lean`; in parallel `Graph/RootedDensity/{Massed,ColoredMatching,RigidTruncation,Extremal,Numerical}.lean` -> `Woven/Uniform.lean`; `Woven/Knitting.lean` | KT feeds the Norin--Postle bound (NP); NP, KT, and Mader feed the small connected subgraph theorem (SC). The rooted-density chain proves Appendix F's generic density-forces-target-minor result, including massed pairs and rigid truncation; KT instantiates it to uniform wovenness. Knitting follows from L. |
+| 6. Chromatic inseparability | `Inseparability/{SmallPieces,CheapTree,Stages,Theorem}.lean` | Derive CI from SC, uniform wovenness, GN, Menger, knitting, and common rerouting. Prove the empty initial stage and treat the first stage separately: its connector needs a rooted clique model to supply adjacency. |
+| 7. Theorem 4 | `Deduction/Theorem4Scale.lean` -> `Deduction/SubgraphRatioBridge.lean` -> `Deduction/Theorem4Proof.lean` | Feed CI into the same outer induction. Compare with `theorem4RatioSet`, including the `q <= t` and `q > t` cases for arbitrary subgraphs. Use `C=3^9 D` for both the coefficient and order cutoff, and prove `Theorem4Statement`. |
+| 8. Unconditional assembly | `Deduction/UnconditionalTheorem1.lean`; extend `Deduction/Audit.lean` and root imports | Apply the two endpoint proofs to the checked `linear_of_theorem4_corollary24` and its Mathlib-facing companion. |
+
+The woven predicate must allow roots that are terminals, coincident
+roles, and singleton pairs, with exact model--linkage intersection. The
+rooted-minor base is tested after deleting occupied original roles,
+with the distinct proxies retained as roots. The hub contract applies
+after deleting the proxies. Rerouted paths lie in the original paths
+**union** woven child graphs. Corollary 24's separation premise concerns induced subgraphs;
+Theorem 4's maximum ranges over arbitrary subgraphs. Keep these as
+proof obligations rather than weakening either endpoint statement.
+
+Implementation mapping recorded during the staged proof work:
+
+- Stage 1's finite integral-flow construction proves the terminal-permitting
+  set Menger statement in `Graph/SetMengerTheorem.lean`; its indexed paths
+  include singleton paths. The edge-contraction model uses `none` for the
+  contracted pair and singleton blocks for all other vertices.
+- Stage 2's clique-density reduction uses the exact edge-loss identity in
+  `Graph/ContractionEdges.lean`; adjoining a vertex complete to a neighborhood
+  minor is proved in `Graph/UniversalVertexMinor.lean`. The rooted-minor
+  dichotomy uses the completed-root graph, and the far-shore restriction and
+  edge-contraction separation pullback are checked in
+  `Graph/RootedCliqueMinor/{SeparatorRestriction,SeparationPullback}.lean`.
+- Stage 3's up-to-budget `Woven` uses `Fin j` with `j <= b` and exact
+  model/linkage intersection. `WovenSolution.reindex` proves dummy path
+  removal, `Graph/NeighborProxies.lean` assigns distinct proxies to repeated
+  roles using Hall's theorem, and `Woven/DistinctRoles.lean` constructs a
+  woven solution from a rooted clique model when all role slots are distinct.
+  The scales in `Woven/OuterScales.lean` satisfy `3 * child = 2 * parent`.
+Deep inputs may temporarily appear as explicit theorem parameters while
+the modules are developed; each must eventually be discharged by a
+proof. Completion requires both endpoint declarations without `sorry`,
+`admit`, or new axioms, focused `lake env lean` checks, a root
+`lake build`, and `assert_no_sorry`/`#print axioms` checks of both
+endpoints and unconditional Theorem 1.
+
 ## Checked common graph inputs (Stage 2, 2026-09-25)
 
 The five common inputs to the outer woven construction are now checked
@@ -332,13 +460,14 @@ up-to-`3a` terminal-pair convention. These checked theorems remain
 conditional on the base, hub, and separation inputs, which the
 Corollary 24 and Theorem 4 specializations must supply.
 
+
 ## Checked Corollary 24 (Stage 4, 2026-09-25)
 
 `Deduction.corollary24_proved` in
 `Deduction/Corollary24Complete.lean` proves
 `Corollary24Statement` unconditionally. It uses the shared outer
-induction with \(K=10000\), \(B=10^6(d+1)\), \(U=2000T\),
-\(h(a)=980a\), and \(\sigma(a)=14da\).
+induction with (K=10000), (B=10^6(d+1)), (U=2000T),
+(h(a)=980a), and (sigma(a)=14da).
 `Corollary24BaseWoven.lean` applies the checked coefficient-30 KT
 minor theorem at every scale below the logarithmic cutoff after
 normalizing repeated role occurrences. `Corollary24HubContract.lean`
@@ -352,3 +481,26 @@ lemmas. The final step uses GN and the top woven claim to obtain a
 forbidden clique minor. The endpoint passes `assert_no_sorry`;
 `#print axioms` lists only `propext`, `Classical.choice`, and
 `Quot.sound`.
+
+
+## Checked sharp rooted-density and woven input (Stage 5, 2026-09-25)
+
+The Appendix F rooted-density argument is checked in
+Graph/RootedDensity/Final.lean. Its unconditional endpoints are
+massedUniversal_sharp and rootedDensity_sharp for targets of order
+at least three. The order-two case has a separate direct argument in
+Graph/RootedDensity/TwoLabels.lean. The reverse direction uses the
+checked colored torso lift in TorsoColoredLift.lean to transfer a
+rooted torso model to an ambient model. The adhesion bound depends on
+the target order, not on the number of roots. Partial ambient labels
+record branches that meet the near shore before the lift is complete.
+
+The small connected subgraph theorem is checked in
+Graph/SmallConnected/Theorem.lean. The knitting and sparse-target
+arguments culminate in Woven/UniformSparseFinal.lean, whose theorem
+woven_of_sharp_connectivity gives the sharp uniform woven input under
+the checked bound of one million times the clique-matching scale.
+These results use finite simple graphs and explicit induced-subgraph
+transport throughout. Focused Lake builds and axiom audits show no
+placeholders or new axioms.
+

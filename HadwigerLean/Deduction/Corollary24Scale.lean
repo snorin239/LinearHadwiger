@@ -7,7 +7,7 @@ namespace HadwigerLean.Deduction
 
 /-- A natural-number bound underlying the final scale comparison. -/
 private theorem twice_mul_four_pow_le_nine_pow
-    (m : ℕ) (hm : 2 ≤ m) : 2 * m * 4 ^ m ≤ 9 ^ m := by
+    (m : ℕ) (hm : 1 ≤ m) : 2 * m * 4 ^ m ≤ 9 ^ m := by
   induction m, hm using Nat.le_induction with
   | base => norm_num
   | succ m hm ih =>
@@ -21,22 +21,22 @@ private theorem twice_mul_four_pow_le_nine_pow
         _ ≤ 9 * 9 ^ m := Nat.mul_le_mul_left _ ih
         _ = 9 ^ (m + 1) := by rw [pow_succ]; ring
 
-/-- For top scale `T=3^m≥100`, the final integer scale `2^m` is at most
+/-- For top scale `T=3^m≥3`, the final integer scale `2^m` is at most
 `T/√(log T)`. -/
 theorem cor24_outerScale_last_le_top_div_sqrt_log
-    (m T : ℕ) (hT : T = 3 ^ m) (hlarge : 100 ≤ T) :
+    (m T : ℕ) (hT : T = 3 ^ m) (hlarge : 3 ≤ T) :
     (HadwigerLean.Woven.outerScale m m : ℝ) ≤
       (T : ℝ) / Real.sqrt (Real.log (T : ℝ)) := by
   subst T
-  have hm : 2 ≤ m := by
+  have hm : 1 ≤ m := by
     by_contra h
-    have hm1 : m ≤ 1 := by omega
+    have hm1 : m ≤ 0 := by omega
     interval_cases m <;> norm_num at hlarge
   have hnat := twice_mul_four_pow_le_nine_pow m hm
   have hnatR : (2 * m * 4 ^ m : ℝ) ≤ (9 ^ m : ℝ) := by
     exact_mod_cast hnat
   have htop : (1 : ℝ) < (3 ^ m : ℕ) := by
-    exact_mod_cast (lt_of_lt_of_le (by norm_num : 1 < 100) hlarge)
+    exact_mod_cast (lt_of_lt_of_le (by norm_num : 1 < 3) hlarge)
   have hlogpos : 0 < Real.log ((3 ^ m : ℕ) : ℝ) := Real.log_pos htop
   have hlog3 : Real.log (3 : ℝ) ≤ 2 := by
     have h := Real.log_le_sub_one_of_pos (by norm_num : 0 < (3 : ℝ))

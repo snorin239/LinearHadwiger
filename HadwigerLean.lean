@@ -40,9 +40,13 @@ import HadwigerLean.Graph.CliqueDensity.Theorem
 import HadwigerLean.Graph.Linkedness.Final
 import HadwigerLean.Woven.OuterAudit
 import HadwigerLean.Deduction.Corollary24CompleteAudit
+import HadwigerLean.Graph.SmallConnected.Theorem
+import HadwigerLean.Woven.Knitting
+import HadwigerLean.Woven.UniformSparseFinal
 
 /-!
 Root module for the formalization of `paper/main.tex`.
-The checked Reed--Seymour lemmas and conditional bound are imported here.
-The unconditional Reed--Seymour theorem remains a proof target; Theorem 2 is checked.
+The unconditional Reed--Seymour theorem and Theorem 2 are checked.
+The checked Appendix F rooted-density theorem, sharp uniform woven theorem,
+and small connected subgraph theorem are imported here.
 -/
