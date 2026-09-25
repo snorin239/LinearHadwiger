@@ -38,6 +38,7 @@ import HadwigerLean.Graph.ChromaticConnectivity.Theorem
 import HadwigerLean.Graph.RootedCliqueMinor.Dichotomy
 import HadwigerLean.Graph.CliqueDensity.Theorem
 import HadwigerLean.Graph.Linkedness.Final
+import HadwigerLean.Woven.OuterAudit
 
 /-!
 Root module for the formalization of `paper/main.tex`.

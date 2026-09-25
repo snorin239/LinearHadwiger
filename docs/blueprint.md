@@ -307,3 +307,27 @@ unconditional. All five endpoints were built with Lake; the root
 `lake build` passed after their imports were added. The linkedness
 endpoint's `#print axioms` lists only `propext`,
 `Classical.choice`, and `Quot.sound`.
+
+## Checked shared outer induction (Stage 3, 2026-09-25)
+
+The finite shared scale recursion is checked in
+`Woven/OuterInductionComplete.lean`. Its top result
+`outerAt_top_of_contracts` assumes only a base-scale woven claim and
+explicit hub and chromatic-separation contracts for each induced host.
+The nonbase theorem `woven_nonbase_of_hub_separation` in
+`Woven/OuterNonbaseStep.lean` discharges the entire geometric step:
+normalization and distinct proxies, the large-clique-minor branch,
+the low-chromatic hub and double fan, GN residual extraction, and
+three connected woven children assembled into a rooted model.
+
+`OuterAt` quantifies over every finite induced subgraph of a fixed
+host; `outerAt_induce` transports it through nested induced vertex
+types. The scale is `2^i 3^(m-i)`, with `3 * child = 2 * parent`.
+The child color-loss ledger is
+`outerChildLoss a K h σ = (45 + 12K)a + h + 2σ`.
+Original roles may coincide; each occurrence receives a distinct
+neighbor proxy outside all original role vertices. The double fan is
+colored with at most four colors per proxy, and the output retains the
+up-to-`3a` terminal-pair convention. These checked theorems remain
+conditional on the base, hub, and separation inputs, which the
+Corollary 24 and Theorem 4 specializations must supply.
