@@ -1,0 +1,13 @@
+import HadwigerLean.Deduction.Corollary24Proof
+import HadwigerLean.Deduction.Corollary24BaseBridge
+import Mathlib.Util.AssertNoSorry
+
+/-! Audits for the checked Corollary 24 specialization bridge. -/
+
+assert_no_sorry HadwigerLean.Deduction.outerSeparation_induce
+assert_no_sorry HadwigerLean.Deduction.cor24_top_scale_above_cutoff
+assert_no_sorry HadwigerLean.Deduction.cor24_base_hasCliqueMinor
+assert_no_sorry HadwigerLean.Deduction.corollary24_of_shared_outer_woven
+
+#print axioms HadwigerLean.Deduction.corollary24_of_shared_outer_woven
+

@@ -544,3 +544,21 @@ The theorem retains the existing universe-polymorphic
 Theorem4Statement in Deduction/ExternalInputs.lean, including its
 supremum over the displayed arbitrary-subgraph ratio set.
 
+
+## Checked unconditional assembly (Stage 8, 2026-09-25)
+
+Deduction/UnconditionalTheorem1.lean applies theorem4_proved and
+corollary24_proved to the checked conditional deduction
+linear_of_theorem4_corollary24. Its theorem1_proved states the
+universal linear chromatic bound for every finite simple graph and
+every t at least two with no K_t minor. Its companion
+theorem1_mathlib_proved uses explicit connected, disjoint, pairwise
+adjacent branch sets and a SimpleGraph.Colorable conclusion.
+
+Deduction/Audit.lean checks the conditional bridges and all four
+unconditional endpoints with assert_no_sorry. The axiom printouts
+for theorem4_proved, corollary24_proved, theorem1_proved, and
+theorem1_mathlib_proved each contain exactly propext,
+Classical.choice, and Quot.sound. All eight dependency-ordered
+checkpoints are therefore closed by checked Lean proofs.
+

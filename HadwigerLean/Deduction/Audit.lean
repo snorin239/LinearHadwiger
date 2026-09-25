@@ -1,0 +1,31 @@
+import HadwigerLean.Deduction.UnconditionalTheorem1
+import Mathlib.Util.AssertNoSorry
+
+/-! Audits for the conditional and unconditional Theorem 1 deductions. -/
+
+assert_no_sorry HadwigerLean.Deduction.quantitative_bound_mathlib
+assert_no_sorry HadwigerLean.Deduction.quantitative_bound_mathlib_at_minor_number
+assert_no_sorry HadwigerLean.Deduction.linear_of_theorem4_corollary24_of_path
+assert_no_sorry HadwigerLean.Deduction.linear_mathlib_of_theorem4_corollary24_of_path
+assert_no_sorry HadwigerLean.Bootstrap.path_localization
+assert_no_sorry HadwigerLean.Deduction.linear_of_theorem4_corollary24
+assert_no_sorry HadwigerLean.Deduction.linear_mathlib_of_theorem4_corollary24
+
+assert_no_sorry HadwigerLean.Deduction.theorem4_proved
+assert_no_sorry HadwigerLean.Deduction.corollary24_proved
+assert_no_sorry HadwigerLean.Deduction.theorem1_proved
+assert_no_sorry HadwigerLean.Deduction.theorem1_mathlib_proved
+
+#print axioms HadwigerLean.Deduction.linear_of_theorem4_corollary24_of_path
+#print axioms HadwigerLean.Deduction.linear_mathlib_of_theorem4_corollary24_of_path
+#print axioms HadwigerLean.Deduction.linear_of_theorem4_corollary24
+#print axioms HadwigerLean.Deduction.linear_mathlib_of_theorem4_corollary24
+
+#print axioms HadwigerLean.Deduction.theorem4_proved
+#print axioms HadwigerLean.Deduction.corollary24_proved
+#print axioms HadwigerLean.Deduction.theorem1_proved
+#print axioms HadwigerLean.Deduction.theorem1_mathlib_proved
+
+#check HadwigerLean.Deduction.linear_of_theorem4_corollary24
+#print HadwigerLean.Deduction.Theorem4Statement
+#print HadwigerLean.Deduction.Corollary24Statement
