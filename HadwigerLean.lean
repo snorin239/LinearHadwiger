@@ -39,6 +39,7 @@ import HadwigerLean.Graph.RootedCliqueMinor.Dichotomy
 import HadwigerLean.Graph.CliqueDensity.Theorem
 import HadwigerLean.Graph.Linkedness.Final
 import HadwigerLean.Woven.OuterAudit
+import HadwigerLean.Deduction.Corollary24CompleteAudit
 
 /-!
 Root module for the formalization of `paper/main.tex`.

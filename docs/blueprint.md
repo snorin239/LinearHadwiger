@@ -331,3 +331,24 @@ colored with at most four colors per proxy, and the output retains the
 up-to-`3a` terminal-pair convention. These checked theorems remain
 conditional on the base, hub, and separation inputs, which the
 Corollary 24 and Theorem 4 specializations must supply.
+
+## Checked Corollary 24 (Stage 4, 2026-09-25)
+
+`Deduction.corollary24_proved` in
+`Deduction/Corollary24Complete.lean` proves
+`Corollary24Statement` unconditionally. It uses the shared outer
+induction with \(K=10000\), \(B=10^6(d+1)\), \(U=2000T\),
+\(h(a)=980a\), and \(\sigma(a)=14da\).
+`Corollary24BaseWoven.lean` applies the checked coefficient-30 KT
+minor theorem at every scale below the logarithmic cutoff after
+normalizing repeated role occurrences. `Corollary24HubContract.lean`
+obtains the 980a-color hub from a chromatic slice and GN.
+`Corollary24SepContract.lean` transports the paper's minor-free
+separability premise to each normalized induced graph.
+`OuterInductionMixed.lean` handles the fact that several final
+integer scales may be below the cutoff. The last scale's cutoff
+inequality and all remaining integer budgets have separate checked
+lemmas. The final step uses GN and the top woven claim to obtain a
+forbidden clique minor. The endpoint passes `assert_no_sorry`;
+`#print axioms` lists only `propext`, `Classical.choice`, and
+`Quot.sound`.
