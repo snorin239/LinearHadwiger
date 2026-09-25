@@ -128,6 +128,13 @@ user-declared axioms. The final
 `Classical.choice`, and `Quot.sound` for both forms of Theorem 1, Theorem 4,
 and Corollary 24. These are Lean's standard logical axioms.
 
+A fresh `ubuntu-24.04` GitHub Actions build succeeded on September 25, 2026
+at commit [`12ca469`](https://github.com/snorin239/LinearHadwiger/commit/12ca469f69d72ab74dc8508d1bee592c017c9255).
+The full job took 17 min 37 s, using the Mathlib cache with GitHub's
+`.lake` cache disabled. Both the fresh-checkout and post-build cleanliness
+checks passed. The [Actions run](https://github.com/snorin239/LinearHadwiger/actions/runs/36144270677)
+records the complete build logs.
+
 ## Sources and attribution
 
 This formalization, including its documentation, was produced by OpenAI
