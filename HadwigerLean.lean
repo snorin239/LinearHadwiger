@@ -34,6 +34,10 @@ import HadwigerLean.ReedSeymour.Maximal
 import HadwigerLean.ReedSeymour.Strategy
 import HadwigerLean.ReedSeymour.Conclusion
 import HadwigerLean.ReedSeymour.Theorem
+import HadwigerLean.Graph.ChromaticConnectivity.Theorem
+import HadwigerLean.Graph.RootedCliqueMinor.Dichotomy
+import HadwigerLean.Graph.CliqueDensity.Theorem
+import HadwigerLean.Graph.Linkedness.Final
 
 /-!
 Root module for the formalization of `paper/main.tex`.

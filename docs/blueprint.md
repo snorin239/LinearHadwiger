@@ -287,3 +287,23 @@ constants. Neither endpoint should be marked formally proved
 in Lean until all of these arguments have been implemented
 without placeholders. No Lean source was changed for this
 documentation checkpoint.
+
+## Checked common graph inputs (Stage 2, 2026-09-25)
+
+The five common inputs to the outer woven construction are now checked
+Lean theorems. Their paper-to-Lean mapping is:
+
+| Paper input | Lean endpoint |
+| --- | --- |
+| Girão--Narayanan chromatic connectivity (GN) | `exists_chromatic_connected_induced` in `Graph/ChromaticConnectivity/Theorem.lean` |
+| Mader density-to-connectivity bound | `hasVertexConnectedInducedSubgraph_of_edgeDensity_ge` in `Graph/DensityConnectivity.lean` |
+| Kawarabayashi rooted clique minor (KR) | `rootedCliqueMinor_of_connected_cliqueMinor` in `Graph/RootedCliqueMinor/Dichotomy.lean` |
+| 16k-connected implies k-linked (L) | `Linkedness.kLinked_of_sixteen_mul_vertexConnected` in `Graph/Linkedness/Final.lean` |
+| Coefficient-30 clique-minor density theorem (KT) | `hasCliqueMinor_of_edgeDensity_ge` in `Graph/CliqueDensity/Theorem.lean` |
+
+The linkedness proof uses finite massed pairs, rigid min-cuts, torso
+linkage gluing, and induction on the order. Its final theorem is
+unconditional. All five endpoints were built with Lake; the root
+`lake build` passed after their imports were added. The linkedness
+endpoint's `#print axioms` lists only `propext`,
+`Classical.choice`, and `Quot.sound`.
