@@ -1,11 +1,18 @@
 # Theorem 2 implementation plan and resume log
 
+All statement wording and numbering below follow the earlier draft,
+[LinearHadwigerAIDraft.pdf](../paper/LinearHadwigerAIDraft.pdf). Theorem 2 here
+is the draft's quantitative bound. The main target is the draft's Theorem 1,
+which is Theorem 2 of Sergey Norin and Raphael Steiner's
+[*A Proof of the Linear Hadwiger Conjecture*](../paper/LinearHadwiger.pdf).
+
 > **Historical plan and resume log.** Theorem 2 is now proved unconditionally
 > in Lean. The baseline and pending tasks below record earlier development
 > stages. See [FORMALIZATION.md](../FORMALIZATION.md) for the current checked
 > endpoint and its paper-to-Lean mapping.
 
-Source: paper/main.tex, Theorem 2 (thm:quantitative, lines 184-190) and proof
+Source: paper/LinearHadwigerAIDraft.tex, Theorem 2 (thm:quantitative,
+lines 184-190) and proof
 (lines 278-946). The checked target is the same explicit real bound
 
   (chromatic G : Real) <= 4 * (cliqueMinorNumber G : Real)

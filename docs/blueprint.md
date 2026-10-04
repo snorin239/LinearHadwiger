@@ -1,12 +1,19 @@
 # Formalization blueprint
 
+All statement wording and numbering below follow the earlier draft,
+[LinearHadwigerAIDraft.pdf](../paper/LinearHadwigerAIDraft.pdf), with source
+[LinearHadwigerAIDraft.tex](../paper/LinearHadwigerAIDraft.tex). The main target,
+Theorem 1 in that draft, is Theorem 2 of Sergey Norin and Raphael Steiner's
+[*A Proof of the Linear Hadwiger Conjecture*](../paper/LinearHadwiger.pdf).
+
 > **Development history.** This blueprint retains chronological checkpoints,
 > including earlier conditional and incomplete stages. Theorem 1, Theorem 2,
 > Theorem 4, and Corollary 24 are now checked unconditionally. See
 > [FORMALIZATION.md](../FORMALIZATION.md) for the current checked endpoints.
 
-Source: paper/main.tex and paper/main.pdf. Theorem 2 is checked. The
-conditional Theorem 1 deduction is checked with exactly paper Theorem 4
+Source: paper/LinearHadwigerAIDraft.tex and paper/LinearHadwigerAIDraft.pdf.
+Theorem 2 is checked. The conditional Theorem 1 deduction is checked with
+exactly paper Theorem 4
 and Corollary 24 as explicit hypotheses; neither input is proved here.
 
 | Paper result | Lean result | Status |
@@ -49,7 +56,7 @@ The dependency order and acceptance checks are recorded in
 The two external hypotheses have exact named interfaces in
 `Deduction/ExternalInputs.lean`:
 
-- Paper Theorem 4 (`thm:dp`, `paper/main.tex:212-227`) is
+- Paper Theorem 4 (`thm:dp`, `paper/LinearHadwigerAIDraft.tex:212-227`) is
   `Theorem4Statement`. One integer `C_DP >= 1` occurs both in
   `chi(G) <= C_DP * t * (1 + f(G,t))` and in the order cutoff
   `|H| <= C_DP * a * (log a)^4`. The ratio set includes zero and ranges
@@ -58,7 +65,7 @@ The two external hypotheses have exact named interfaces in
   maximum: `theorem4RatioSet_finite` and `theorem4MaxRatio_mem` are
   checked. `theorem4_elimination` proves the pointwise form used in the
   final deduction.
-- Paper Corollary 24 (`cor:outer`, `paper/main.tex:1382-1398`) is
+- Paper Corollary 24 (`cor:outer`, `paper/LinearHadwigerAIDraft.tex:1382-1398`) is
   `Corollary24Statement`. It requires `t >= 100`, `d >= 1`, and `T`
   to be the least power of three at least `t`. `IsOuterScale T a`
   means `3^i * a = 2^i * T` for some natural `i`.
@@ -106,7 +113,8 @@ Its `#print axioms` reports only `propext`, `Classical.choice`, and
 
 ## Theorem 2 dependency map
 
-Theorem 2 (paper/main.tex:184-190, proof 278-946) states that for every finite
+Theorem 2 (paper/LinearHadwigerAIDraft.tex:184-190, proof 278-946) states that
+for every finite
 graph G and 0 < epsilon <= 1,
 
     chi(G) <= 4 h(G) + epsilon |V(G)| + (100/epsilon)^(2000/epsilon^2).

@@ -1,5 +1,12 @@
 # Corollary 24 and Theorem 4: common woven proof
 
+Statement wording and numbering for the main paper below follow the
+earlier draft, [LinearHadwigerAIDraft.pdf](../paper/LinearHadwigerAIDraft.pdf).
+Its Theorem 1 is the main target, Theorem 2 of Sergey Norin and Raphael
+Steiner's
+[*A Proof of the Linear Hadwiger Conjecture*](../paper/LinearHadwiger.pdf).
+References to other papers retain their own numbering.
+
 **Status (24 September 2026).** This is a self-contained mathematical
 proof manuscript for both endpoints. Sections 1–6 give the shared
 induction and endpoint deductions; Sections 7–8 prove the auxiliary
@@ -9,7 +16,8 @@ unproved proof leaves. The argument has undergone separate adversarial
 audits of its main auxiliary proofs. Nothing here is claimed to be a
 Lean-checked proof.
 
-The mathematical sources are the [main paper](../paper/main.tex), especially
+The mathematical sources are the
+[main paper](../paper/LinearHadwigerAIDraft.tex), especially
 Lemma 23 and Corollary 24, and [Delcourt–Postle, arXiv:2108.01633v5](https://arxiv.org/pdf/2108.01633v5),
 especially Theorems 1.6 and 7.1. The latter paper's printed proof needs several
 repairs before it can serve as a complete proof; these are recorded below.

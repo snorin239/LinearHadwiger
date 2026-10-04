@@ -2,9 +2,13 @@
 
 ## Objective
 
-Formalize the paper in `paper/main.tex` in Lean 4 with Mathlib. The main target
-is Theorem 1 (`thm:linear`). Treat the paper as the source for mathematical
-intent and Lean as the source for the checked formal statement.
+Formalize Theorem 2 of Sergey Norin and Raphael Steiner's *A Proof of the
+Linear Hadwiger Conjecture* (`paper/LinearHadwiger.pdf`) in Lean 4 with Mathlib.
+The working source is `paper/LinearHadwigerAIDraft.tex`, with PDF
+`paper/LinearHadwigerAIDraft.pdf`. Documentation wording and numbering follow
+this earlier draft, where the main target is Theorem 1 (`thm:linear`). Treat
+the paper as the source for mathematical intent and Lean as the source for
+the checked formal statement.
 
 ## Start a mathematical task
 

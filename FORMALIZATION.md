@@ -1,9 +1,14 @@
-# Formalization of *A proof of the Linear Hadwiger's conjecture*
+# Formalization of *A Proof of the Linear Hadwiger Conjecture*
 
-This document describes the Lean 4 + Mathlib formalization of Theorem 1 of
-Sergey Norin's [paper](paper/main.pdf). Statement numbers refer to that
-bundled PDF. The paper supplies the mathematical intent; the declarations
-accepted by Lean are the checked statements.
+This document describes the Lean 4 + Mathlib formalization of Theorem 2 of
+Sergey Norin and Raphael Steiner's
+[*A Proof of the Linear Hadwiger Conjecture*](paper/LinearHadwiger.pdf).
+All statement wording and numbering below follow the
+[earlier draft](paper/LinearHadwigerAIDraft.pdf), whose LaTeX source is
+[LinearHadwigerAIDraft.tex](paper/LinearHadwigerAIDraft.tex). The theorem
+being formalized is Theorem 1 in that draft. The paper supplies the
+mathematical intent; the declarations accepted by Lean are the checked
+statements.
 
 ## Target and checked endpoints
 
@@ -219,7 +224,7 @@ sufficient variants where the development does not expose a literal
 translation of an intermediate statement. Declaration names are relative
 to `HadwigerLean` unless another namespace is shown.
 
-| Result in `main.pdf` | Lean declaration or module | Role or difference |
+| Result in `LinearHadwigerAIDraft.pdf` | Lean declaration or module | Role or difference |
 |---|---|---|
 | Theorem 1 | `Deduction.theorem1_proved`, `Deduction.theorem1_mathlib_proved` | Unconditional final bounds. |
 | Theorem 2 | `Theorem2.quantitative_bound` | Preserves the explicit additive constant and the full range $0<\varepsilon\le1$. |

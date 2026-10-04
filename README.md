@@ -1,8 +1,12 @@
 # Linear Hadwiger's conjecture in Lean
 
-This repository contains a Lean 4 + Mathlib formalization of Theorem 1 of
-Sergey Norin, [*A proof of the Linear Hadwiger's conjecture*](paper/main.pdf).
-The bundled PDF is the source for the statement wording and numbering below.
+This repository contains a Lean 4 + Mathlib formalization of Theorem 2 of
+Sergey Norin and Raphael Steiner,
+[*A Proof of the Linear Hadwiger Conjecture*](paper/LinearHadwiger.pdf).
+All statement wording and numbering below follow the
+[earlier draft](paper/LinearHadwigerAIDraft.pdf), whose LaTeX source is
+[LinearHadwigerAIDraft.tex](paper/LinearHadwigerAIDraft.tex). The theorem
+being formalized is Theorem 1 in that draft.
 The final theorem is unconditional: the graph-theoretic inputs used in its
 proof are also supplied by checked Lean proofs.
 
@@ -140,7 +144,8 @@ records the complete build logs.
 This formalization, including its documentation, was produced by OpenAI
 Codex versions 6 Sol and Astra, following guidance from the paper's authors.
 
-The mathematical source is the [bundled paper](paper/main.pdf); its
+The mathematical source for this documentation's wording and numbering is the
+[earlier draft](paper/LinearHadwigerAIDraft.pdf); its
 introduction includes the disclosure about AI assistance in developing
 the mathematical proof. The Lean development uses Mathlib and three
 vendored EconCSLib files for Fourier--Motzkin elimination, Farkas' lemma,
@@ -150,8 +155,8 @@ Apache-2.0 attribution are recorded in the
 
 ## License
 
-Copyright 2026 Sergey Norin, except for third-party material attributed to
-its respective copyright holders.
+Copyright 2026 Sergey Norin and Raphael Steiner, except for third-party
+material attributed to its respective copyright holders.
 
 The project's Lean code, build files, and repository documentation are
 licensed under the [Apache License 2.0](LICENSE). The paper in `paper/`,

@@ -1,5 +1,12 @@
 # Theorem 4 and Corollary 24: proof and formalization plan
 
+Statement wording and numbering for the main paper below follow the
+earlier draft, [LinearHadwigerAIDraft.pdf](../paper/LinearHadwigerAIDraft.pdf).
+Its Theorem 1 is the main target, Theorem 2 of Sergey Norin and Raphael
+Steiner's
+[*A Proof of the Linear Hadwiger Conjecture*](../paper/LinearHadwiger.pdf).
+References to Delcourt–Postle retain that paper's numbering.
+
 > **Historical plan.** The status and pending tasks below describe an
 > earlier development stage. Theorem 4 and Corollary 24 have since been
 > proved unconditionally in Lean. See [FORMALIZATION.md](../FORMALIZATION.md)
@@ -14,7 +21,8 @@ already defined in `HadwigerLean/Deduction/ExternalInputs.lean` as
 
 ## Endpoints and sources
 
-* Main paper Theorem 4 (`paper/main.tex`, `thm:dp`, lines 212–227) is
+* Main paper Theorem 4 (`paper/LinearHadwigerAIDraft.tex`, `thm:dp`,
+  lines 212–227) is
   [Delcourt–Postle Theorem 1.6](https://arxiv.org/pdf/2108.01633v5).
   Its one constant occurs in both the global coloring coefficient and the
   small-subgraph order cutoff. The maximization is over arbitrary subgraphs,

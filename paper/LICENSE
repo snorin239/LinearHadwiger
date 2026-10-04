@@ -1,7 +1,8 @@
-A proof of the Linear Hadwiger's conjecture
-Copyright 2026 Sergey Norin
+A Proof of the Linear Hadwiger Conjecture
+Copyright 2026 Sergey Norin and Raphael Steiner
 
-The paper in this directory, including main.tex and main.pdf, is licensed
+The paper in this directory, including LinearHadwiger.pdf,
+LinearHadwigerAIDraft.tex, and LinearHadwigerAIDraft.pdf, is licensed
 under the Creative Commons Attribution 4.0 International license (CC BY 4.0).
 https://creativecommons.org/licenses/by/4.0/
 
